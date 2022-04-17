@@ -1,7 +1,8 @@
-import {Container} from '@mui/material'
+import { NavBar } from './NavBar'
+import { Container } from '@mui/material'
 import Head from 'next/head'
 
-export const Layout = ({ children }: IProps): JSX.Element => {
+export const Layout = ({ children }: IDefaultProps): JSX.Element => {
   return (
     <>
       <Head>
@@ -9,6 +10,7 @@ export const Layout = ({ children }: IProps): JSX.Element => {
         <meta name='description' content='A faucet for fweb3' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
+      <NavBar />
       <Container disableGutters>{children}</Container>
     </>
   )

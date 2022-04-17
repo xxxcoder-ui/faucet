@@ -1,6 +1,6 @@
 type Nullable<T> = T | null | undefined
 
-interface IProps {
+interface IDefaultProps {
   children: JSX.Element
   sx?: object
 }
