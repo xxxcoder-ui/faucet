@@ -17,6 +17,6 @@ export const gasInfo = async ({provider}: IEthersInterfaces) => {
     maxPriorityFeePerGas: maxPriorityFeePerGas?.toString(),
     gasPrice: gasPrice?.toString(),
   }
-  console.log(info)
+  console.log({ gasInfo: info })
   return info
 }

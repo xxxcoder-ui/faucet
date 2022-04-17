@@ -1,24 +1,30 @@
-import { Button, ButtonGroup, TextField, Typography } from '@mui/material'
+import {
+  Button,
+  ButtonGroup,
+  TextField,
+  Typography,
+  Tooltip,
+} from '@mui/material'
 import { useState } from 'react'
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 import { LoadingOverlay } from './LoadingOverlay'
+import { usePermissions } from '../hooks/usePermissions'
+import { useMoralis } from 'react-moralis'
 
 export const FaucetForm = () => {
+  const { account } = useMoralis()
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const [sendAddress, setSendAddress] = useState('')
   const [response, setResponse] = useState({})
-  const handleSendAddressChange = (e: any) => {
-    setSendAddress(e.target.value)
-  }
+  const { canUseMaticFaucet, canUseFweb3Faucet } = usePermissions()
 
   const handleMaticFaucet = async () => {
     try {
       setError('')
       setLoading(true)
       const network = 'local'
-      const uri = `/api/faucet/${network}/matic?address=${sendAddress}`
+      const uri = `/api/faucet/${network}/matic?address=${account}`
       const res = await fetch(uri)
       const data = await res.json()
       const { error, transactionHash } = data
@@ -34,6 +40,14 @@ export const FaucetForm = () => {
   }
 
   const handleFweb3Faucet = async () => {}
+
+  const fweb3ButtonToolTip = canUseFweb3Faucet
+    ? 'Get some FWEB3'
+    : 'You dont meet the requirements for the faucet'
+
+  const maticButtonToolTip = canUseMaticFaucet
+    ? 'Get some MATIC'
+    : 'You dont meet the requirements for the faucet'
 
   return (
     <>
@@ -61,12 +75,6 @@ export const FaucetForm = () => {
           <Typography variant='h4' sx={{ margin: '1em' }}>
             Fweb3 Faucet
           </Typography>
-          <TextField
-            onChange={handleSendAddressChange}
-            value={sendAddress}
-            label='Receiving Address'
-            variant='outlined'
-          />
           <ButtonGroup
             size='large'
             sx={{
@@ -75,12 +83,28 @@ export const FaucetForm = () => {
               margin: '2em',
             }}
           >
-            <Button variant='contained' onClick={handleFweb3Faucet}>
-              Fweb3
-            </Button>
-            <Button variant='contained' onClick={handleMaticFaucet}>
-              MATIC
-            </Button>
+            <Tooltip title={fweb3ButtonToolTip} arrow>
+              <div>
+                <Button
+                  disabled={!canUseFweb3Faucet}
+                  variant='contained'
+                  onClick={handleFweb3Faucet}
+                >
+                  Fweb3
+                </Button>
+              </div>
+            </Tooltip>
+            <Tooltip title={maticButtonToolTip} arrow>
+              <div>
+                <Button
+                  disabled={!canUseMaticFaucet}
+                  variant='contained'
+                  onClick={handleMaticFaucet}
+                >
+                  MATIC
+                </Button>
+              </div>
+            </Tooltip>
           </ButtonGroup>
           {response && <Typography>{JSON.stringify(response)}</Typography>}
           {error && <Typography>{error}</Typography>}

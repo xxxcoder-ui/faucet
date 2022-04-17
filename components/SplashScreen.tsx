@@ -1,5 +1,14 @@
-import { Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 
 export const SplashScreen = () => {
-  return <Typography variant='h4'>Please Connect Wallet</Typography>
+  return (
+    <Box
+      display='flex'
+      justifyContent='center'
+      alignItems='center'
+      minHeight='100vh'
+    >
+      <Typography variant='h4'>Please Connect Wallet</Typography>
+    </Box>
+  )
 }

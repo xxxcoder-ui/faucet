@@ -8,14 +8,16 @@ import { useState } from 'react'
 export const ConnectButton = () => {
   const [error, setError] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
-  const { authenticate, logout }: MoralisContextValue = useMoralis()
+  const {
+    authenticate,
+    logout,
+  }: MoralisContextValue = useMoralis()
   const { isConnected } = useAuth()
-
   const handleConnect = async () => {
     try {
       setError('')
       setLoading(true)
-      await authenticate()
+      await authenticate({ signingMessage: 'Connect to the FWEB3 Game!'})
       setLoading(false)
     } catch (e: any) {
       setError(e?.message)
@@ -37,7 +39,11 @@ export const ConnectButton = () => {
           Connect
         </LoadingButton>
       ) : (
-        <Button variant='outlined' size='large' onClick={handleDisconnect}>
+        <Button
+          variant='outlined'
+          size='large'
+          onClick={handleDisconnect}
+        >
           Disconnect
         </Button>
       )}

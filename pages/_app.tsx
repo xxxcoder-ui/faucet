@@ -1,4 +1,4 @@
-import { AuthProvider } from '../hooks/useAuth'
+import { AuthProvider, NetworkProvider } from '../hooks'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
 import { Layout } from '../components/Layout'
 import { MORALIS_APP_ID, MORALIS_SERVER_URL } from '../constants'
@@ -18,9 +18,11 @@ function App({ Component, pageProps }: AppProps) {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <AuthProvider>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
+          <NetworkProvider>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </NetworkProvider>
         </AuthProvider>
       </ThemeProvider>
     </MoralisProvider>

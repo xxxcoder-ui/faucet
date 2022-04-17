@@ -14,7 +14,7 @@ const AuthProvider = ({ children }: IDefaultProps) => {
   } = moralisState
   const [isConnected, setIsConnected] = useState<boolean>(false)
   const shouldReEnableWeb3 =
-    isAuthenticated && !isWeb3Enabled && !isWeb3EnableLoading
+    !account && isAuthenticated && !isWeb3Enabled && !isWeb3EnableLoading
 
   useEffect(() => {
     if (shouldReEnableWeb3) {
@@ -23,7 +23,7 @@ const AuthProvider = ({ children }: IDefaultProps) => {
   }, [shouldReEnableWeb3]) // eslint-disable-line
 
   useEffect(() => {
-    if (isAuthenticated && account) {
+    if (isAuthenticated && account && isWeb3Enabled) {
       setIsConnected(true)
     } else {
       setIsConnected(false)
