@@ -20,9 +20,7 @@ export const createLocalInterfaces = async ({
   const wallet = await _createLocalWallet(provider)
   const contract = await _createLocalFaucetContract(wallet)
   return {
-    maticFaucetAddress: LOCAL_MATIC_FAUCET_ADDRESS,
-    erc20FaucetAddress: LOCAL_ERC20_FAUCET_ADDRESS,
-    erc20TokenAddress: LOCAL_ERC20_TOKEN_ADDRESS,
+    faucetAddress: LOCAL_MATIC_FAUCET_ADDRESS,
     recipient,
     provider,
     wallet,
@@ -38,9 +36,7 @@ export const createMumbaiInterfaces = async ({
   const wallet = await _createMumbaiWallet(provider)
   const contract = await _createMumbaiFaucetContract(wallet)
   return {
-    maticFaucetAddress: MUMBAI_MATIC_FAUCET_ADDRESS,
-    erc20FaucetAddress: MUMBAI_ERC20_FAUCET_ADDRESS,
-    erc20TokenAddress: MUMBAI_ERC20_TOKEN_ADDRESS,
+    faucetAddress: MUMBAI_MATIC_FAUCET_ADDRESS,
     recipient,
     provider,
     wallet,
@@ -56,9 +52,7 @@ export const createPolygonInterfaces = async ({
   const wallet = await _createPolygonWallet(provider)
   const contract = await _createPolygonFaucetContract(wallet)
   return {
-    maticFaucetAddress: MUMBAI_MATIC_FAUCET_ADDRESS,
-    erc20FaucetAddress: MUMBAI_ERC20_FAUCET_ADDRESS,
-    erc20TokenAddress: MUMBAI_ERC20_TOKEN_ADDRESS,
+    faucetAddress: MUMBAI_MATIC_FAUCET_ADDRESS,
     recipient,
     provider,
     wallet,

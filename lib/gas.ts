@@ -4,8 +4,6 @@ export const canAffordToDripMatic = async ({
   contract,
   wallet,
 }: IEthersInterfaces): Promise<boolean> => {
-  console.log('here')
-
   const estimate = await contract.estimateGas.dripEth(wallet.address)
   const currentBalance = await wallet.getBalance()
   return currentBalance.sub(estimate).gt(0)

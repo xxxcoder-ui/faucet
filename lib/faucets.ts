@@ -4,7 +4,6 @@ import { canAffordToDripMatic } from './gas'
 export const dripMatic = async (interfaces: IEthersInterfaces) => {
   const canAfford = await canAffordToDripMatic(interfaces)
   const contractHasFunds = await _faucetHasFunds(interfaces)
-
   if (!canAfford) {
     throw new Error('Owner cant afford gas')
   }
@@ -18,9 +17,9 @@ export const dripMatic = async (interfaces: IEthersInterfaces) => {
 
 const _faucetHasFunds = async ({
   provider,
-  maticFaucetAddress,
+  faucetAddress,
 }: IEthersInterfaces): Promise<boolean> => {
-  const faucetBalance = await provider.getBalance(maticFaucetAddress)
+  const faucetBalance = await provider.getBalance(faucetAddress)
   console.log({ faucetBalance: faucetBalance.toString() })
   return faucetBalance.gt(0)
 }

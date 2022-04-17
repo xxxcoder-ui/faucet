@@ -10,10 +10,10 @@ export default async function handler(
   try {
     const interfaces = await createLocalInterfaces(req.query)
     const tx = await dripMatic(interfaces)
-    res.status(200).json({ status: 'ok', tx })
+    res.status(200).json({ status: 'ok', ...tx })
   } catch (err: any) {
     const reason = _errorReason(err)
-    res.status(500).json({ error: reason, status: 'error' })
+    res.status(200).json({ error: reason, status: 'error' })
   }
 }
 
