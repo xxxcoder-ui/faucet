@@ -10,7 +10,7 @@ export const SplashScreen = () => {
       minHeight='80vh'
       color='aliceblue'
     >
-      <Typography variant='h1'>Fweb3</Typography>
+      <Typography variant='h1'>Fweb3 Faucet</Typography>
       <Typography variant='h4'>Please Connect Wallet</Typography>
     </Box>
   )
