@@ -1,5 +1,5 @@
 import { green, red } from '@mui/material/colors'
-import { useAuth, useNetwork } from '../hooks'
+import { useAuth, useNetwork } from '../../hooks'
 import { useMoralis } from 'react-moralis'
 import Box from '@mui/material/Box'
 import CheckIcon from '@mui/icons-material/Check'
@@ -22,7 +22,6 @@ const BoxItem = ({ children }: IDefaultProps): JSX.Element => {
 export const NetworkInformation = () => {
   const { networkName, networkAllowed } = useNetwork()
   const { isWeb3Enabled, isAuthenticated } = useMoralis()
-  const { isConnected } = useAuth()
 
   const renderConnectedAllowedNetwork = () => {
     return (
@@ -66,7 +65,7 @@ export const NetworkInformation = () => {
             sx={{ color: red[500] }}
             style={{ minWidth: '40px' }}
           />
-          <Typography color={red[500]}>not connected</Typography>
+          <Typography noWrap color={red[500]}>not connected</Typography>
         </>
       </BoxItem>
     )

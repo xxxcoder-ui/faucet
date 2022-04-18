@@ -4,10 +4,13 @@ export const SplashScreen = () => {
   return (
     <Box
       display='flex'
-      justifyContent='center'
+      flexDirection='column'
+      justifyContent='space-evenly'
       alignItems='center'
-      minHeight='100vh'
+      minHeight='80vh'
+      color='aliceblue'
     >
+      <Typography variant='h1'>Fweb3</Typography>
       <Typography variant='h4'>Please Connect Wallet</Typography>
     </Box>
   )

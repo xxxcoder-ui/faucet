@@ -1,6 +1,6 @@
-import { Button, Toolbar } from '@mui/material'
-import { ErrorAlert } from './ErrorAlert'
-import { IAuthState, useAuth } from '../hooks'
+import { Button, AppBar, Typography, useTheme, Toolbar } from '@mui/material'
+import { ErrorAlert } from '../ErrorAlert'
+import { IAuthState, useAuth } from '../../hooks'
 import { LoadingButton } from '@mui/lab'
 import { MoralisContextValue, useMoralis } from 'react-moralis'
 import { useState } from 'react'
@@ -13,6 +13,14 @@ export const ConnectButton = () => {
     logout,
   }: MoralisContextValue = useMoralis()
   const { isConnected }: IAuthState = useAuth()
+  const theme = useTheme()
+
+  const styles = {
+    connectButton: {
+      // padding: '1em'
+    }
+  }
+
   const handleConnect = async () => {
     try {
       setError('')
@@ -28,26 +36,34 @@ export const ConnectButton = () => {
     await logout()
   }
   return (
-    <Toolbar>
+    <>
       {!isConnected ? (
         <LoadingButton
-          variant='outlined'
+          variant='contained'
           loading={loading}
           onClick={handleConnect}
           size='large'
+          fullWidth
+          sx={{
+            background: 'red',
+            ":hover": {
+              background: 'green'
+            }
+          }}
         >
-          Connect
+          <Typography variant='body1'>Connect</Typography>
         </LoadingButton>
       ) : (
         <Button
-          variant='outlined'
+          sx={styles.connectButton}
+          variant='contained'
           size='large'
           onClick={handleDisconnect}
         >
-          Disconnect
+          <Typography>Disconnect</Typography>
         </Button>
       )}
       <ErrorAlert error={error} setError={setError} />
-    </Toolbar>
+    </>
   )
 }

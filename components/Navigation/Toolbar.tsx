@@ -1,8 +1,8 @@
 import { ConnectButton } from './ConnectButton'
 import { NetworkInformation } from './NetworkInformation'
-import { Toolbar } from '@mui/material'
-import { ErrorAlert } from './ErrorAlert'
-import { useNetwork } from '../hooks'
+import { AppBar, Toolbar } from '@mui/material'
+import { ErrorAlert } from '../ErrorAlert'
+import { useNetwork } from '../../hooks'
 import { useEffect, useState } from 'react'
 
 export const NavBar = () => {
@@ -17,17 +17,23 @@ export const NavBar = () => {
     }
   }, [networkAllowed])
   return (
-    <>
+    <AppBar
+      position='static'
+      sx={{
+        background: 'black',
+      }}
+    >
       <Toolbar
         disableGutters
         sx={{
           justifyContent: 'space-between',
+          m: '1em',
         }}
       >
         <ConnectButton />
         <NetworkInformation />
       </Toolbar>
       <ErrorAlert error={error} setError={setError} />
-    </>
+    </AppBar>
   )
 }

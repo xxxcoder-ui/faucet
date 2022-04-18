@@ -1,4 +1,4 @@
-import { NavBar } from './NavBar'
+import { NavBar } from './Navigation/Toolbar'
 import { Container } from '@mui/material'
 import Head from 'next/head'
 

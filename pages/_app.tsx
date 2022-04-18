@@ -5,12 +5,7 @@ import { MORALIS_APP_ID, MORALIS_SERVER_URL } from '../constants'
 import { MoralisProvider } from 'react-moralis'
 import CssBaseline from '@mui/material/CssBaseline'
 import type { AppProps } from 'next/app'
-
-const theme = createTheme({
-  palette: {
-    mode: 'dark',
-  },
-})
+import { theme } from '../theme'
 
 function App({ Component, pageProps }: AppProps) {
   return (

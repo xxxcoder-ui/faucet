@@ -8,8 +8,9 @@ import { ALLOWED_NETWORKS_MAP, NETWORKS } from '../../constants'
 import { Fweb3Button } from './Fweb3'
 import { MaticButton } from './Matic'
 import Link from 'next/link'
-import { Container } from '@mui/material'
+import { Container, useTheme } from '@mui/material'
 import { green } from '@mui/material/colors'
+import { LargeText } from '../shared/LargeText'
 
 export const createScannerUrl = (
   chainId: string,
@@ -29,41 +30,35 @@ export const FaucetForm = () => {
   const [scannerUrl, setScannerUrl] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
+  const theme = useTheme()
 
+  const styles = {
+    container: {
+      display: 'flex',
+      justifyContent: 'center',
+    },
+    buttonContainer: {},
+    form: {
+      padding: theme.spacing(3),
+      margin: theme.spacing(5),
+    },
+    display: 'flex',
+    margin: theme.spacing(2),
+    alignItems: 'center',
+  }
   return (
     <>
       <LoadingOverlay
         isLoading={loading}
         loadingMessage='Sending Transaction...'
       />
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-        }}
-      >
-        <Paper
-          elevation={24}
-          sx={{
+      <Box sx={styles.container}>
+        <Paper elevation={24} sx={styles.form}>
+          <LargeText text='Fweb3 Faucet (beta)' />
+          <Box m={3} sx={{
             display: 'flex',
-            flexDirection: 'column',
-            textAlign: 'center',
-            width: '80%',
-            margin: '2em',
-            padding: '2em',
-          }}
-        >
-          <Typography variant='h4' sx={{ margin: '1em' }}>
-            Fweb3 Faucet
-          </Typography>
-          <ButtonGroup
-            size='large'
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-evenly',
-              margin: '2em',
-            }}
-          >
+            justifyContent: 'space-between'
+          }}>
             <Fweb3Button
               setError={setError}
               setLoading={setLoading}
@@ -76,7 +71,7 @@ export const FaucetForm = () => {
               setScannerUrl={setScannerUrl}
               setTransaction={setTransaction}
             />
-          </ButtonGroup>
+          </Box>
           {scannerUrl && (
             <Container>
               <Typography>{transaction}</Typography>
