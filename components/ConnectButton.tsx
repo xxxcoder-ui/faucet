@@ -1,8 +1,8 @@
 import { Button, Toolbar } from '@mui/material'
 import { ErrorAlert } from './ErrorAlert'
+import { IAuthState, useAuth } from '../hooks'
 import { LoadingButton } from '@mui/lab'
 import { MoralisContextValue, useMoralis } from 'react-moralis'
-import { useAuth } from '../hooks/useAuth'
 import { useState } from 'react'
 
 export const ConnectButton = () => {
@@ -12,7 +12,7 @@ export const ConnectButton = () => {
     authenticate,
     logout,
   }: MoralisContextValue = useMoralis()
-  const { isConnected } = useAuth()
+  const { isConnected }: IAuthState = useAuth()
   const handleConnect = async () => {
     try {
       setError('')

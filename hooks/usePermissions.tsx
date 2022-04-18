@@ -1,5 +1,5 @@
 import {
-  ALLOWED_NETWORKS,
+  ALLOWED_NETWORKS_MAP,
   MUMBAI_ERC20_TOKEN_ADDRESS,
   POLYGON_ERC20_TOKEN_ADDRESS,
   MIN_REQUIRED_FWEB3_FOR_MATIC,
@@ -7,21 +7,28 @@ import {
   POLYGON_ADMIN_NFT_ADDRESS,
 } from '../constants'
 import { ethers } from 'ethers'
+import { IAuthState, useAuth } from './useAuth'
 import { IMoralisResponse } from '../lib/types'
-import { useAuth } from './useAuth'
+import { INetworkState } from './useNetwork'
+import { MoralisContextValue, useMoralis } from 'react-moralis'
 import { useEffect, useState } from 'react'
-import { useMoralis } from 'react-moralis'
 import { useMoralisWeb3Api } from 'react-moralis'
 import { useNetwork } from './useNetwork'
 
-export const usePermissions = () => {
+export interface IPermissionsState {
+  isAdmin: boolean
+  canUseMaticFaucet: boolean
+  canUseFweb3Faucet: boolean
+}
+
+export const usePermissions = (): IPermissionsState => {
   const [canUseFweb3Faucet, setCanUseFweb3Faucet] = useState<boolean>(false)
   const [canUseMaticFaucet, setCanUseMaticFaucet] = useState<boolean>(false)
+  const { account, chainId }: MoralisContextValue = useMoralis()
   const [isAdmin, setIsAdmin] = useState<boolean>(false)
-  const { account, chainId } = useMoralis()
-  const { isLocalnet } = useNetwork()
+  const { isLocalnet }: INetworkState = useNetwork()
   const Web3Api = useMoralisWeb3Api()
-  const { isConnected } = useAuth()
+  const { isConnected }: IAuthState = useAuth()
 
   const fetchFweb3Balance = async () => {
     const opts = chainId && _createBalanceRequestOptions(chainId, account || '')
@@ -67,7 +74,9 @@ export const usePermissions = () => {
   useEffect(() => {
     ;(async () => {
       try {
-        const chainIsAllowed = ALLOWED_NETWORKS.includes(chainId || '')
+        const chainIsAllowed = Object.keys(ALLOWED_NETWORKS_MAP).includes(
+          chainId || ''
+        )
         if (!chainIsAllowed) {
           setIsAdmin(false)
           setCanUseFweb3Faucet(false)

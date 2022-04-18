@@ -1,19 +1,25 @@
 import { createContext, useState, useEffect, useContext } from 'react'
 import { MoralisContextValue, useMoralis } from 'react-moralis'
 
-const AuthContext = createContext({ isConnected: false })
+export interface IAuthState {
+  isConnected: boolean
+}
+
+const defaultAuthState: IAuthState = { isConnected: false }
+
+const AuthContext = createContext(defaultAuthState)
 
 const AuthProvider = ({ children }: IDefaultProps) => {
-  const moralisState: MoralisContextValue = useMoralis()
   const {
     isAuthenticated,
     isWeb3Enabled,
     account,
     enableWeb3,
     isWeb3EnableLoading,
-  } = moralisState
+  }: MoralisContextValue = useMoralis()
+
   const [isConnected, setIsConnected] = useState<boolean>(false)
-  const shouldReEnableWeb3 =
+  const shouldReEnableWeb3: boolean =
     !account && isAuthenticated && !isWeb3Enabled && !isWeb3EnableLoading
 
   useEffect(() => {

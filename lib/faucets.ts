@@ -1,31 +1,40 @@
-import { IEthersInterfaces } from './types'
+import { BigNumber, ethers } from 'ethers'
 import { canAffordToDripMatic } from './gas'
+import { IEthersInterfaces } from './types'
 
-export const dripMatic = async (interfaces: IEthersInterfaces) => {
-  const canAfford = await canAffordToDripMatic(interfaces)
-  const contractHasFunds = await _faucetHasFunds(interfaces)
+export const dripMatic = async (
+  interfaces: IEthersInterfaces
+): Promise<ethers.providers.TransactionReceipt> => {
+  const canAfford: boolean = await canAffordToDripMatic(interfaces)
+  const contractHasFunds: boolean = await _faucetHasFunds(interfaces)
   if (!canAfford) {
     throw new Error('Owner cant afford gas')
   }
   if (!contractHasFunds) {
     throw new Error('Faucet is dry')
   }
-  const tx = await _dripEth(interfaces)
-  console.log({ drip_tx: tx })
-  return tx
+  const receipt: ethers.providers.TransactionReceipt = await _dripMatic(
+    interfaces
+  )
+  return receipt
 }
 
 const _faucetHasFunds = async ({
   provider,
   faucetAddress,
 }: IEthersInterfaces): Promise<boolean> => {
-  const faucetBalance = await provider.getBalance(faucetAddress)
+  const faucetBalance: BigNumber = await provider.getBalance(faucetAddress)
   console.log({ faucetBalance: faucetBalance.toString() })
   return faucetBalance.gt(0)
 }
 
-const _dripEth = async ({ contract, recipient }: IEthersInterfaces) => {
-  const tx = await contract.dripEth(recipient)
-  const receipt = await tx.wait()
+const _dripMatic = async ({
+  contract,
+  recipient,
+}: IEthersInterfaces): Promise<ethers.providers.TransactionReceipt> => {
+  const tx: ethers.providers.TransactionResponse = await contract.dripEth(
+    recipient
+  )
+  const receipt: ethers.providers.TransactionReceipt = await tx.wait()
   return receipt
 }

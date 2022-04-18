@@ -1,4 +1,4 @@
-import { ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 
 export interface IEthersInterfaces {
   recipient: string
@@ -24,4 +24,36 @@ export interface IMoralisResponse {
   is_valid?: number
   syncing?: number
   frozen?: number
+}
+
+export interface IFaucetResponse {
+  status: string
+  error?: string
+  data?: ethers.providers.TransactionReceipt | IMoralisResponse
+}
+
+export interface ITXResponse {
+  to: string
+  from: string
+  contractAddress: Nullable<string>
+  transactionIndex: number
+  gasUsed: BigNumber
+  logsBloom: string
+  blockHash: string
+  transactionHash: string
+  logs: any[]
+  blockNumber: number
+  confirmations: number
+  cumulativeGasUsed: BigNumber
+  effectiveGasPrice: BigNumber
+  status: number
+  type: number
+  byzantium: boolean
+  events: any[]
+}
+
+export interface IGasFees {
+  maxFeePerGas?: string
+  maxPriorityFeePerGas?: string
+  gasPrice?: string
 }

@@ -1,5 +1,5 @@
 import { Container } from '@mui/material'
-import { FaucetForm } from '../components/FaucetForm'
+import { FaucetForm } from '../components/Faucet/FaucetForm'
 import { SplashScreen } from '../components/SplashScreen'
 import { useAuth } from '../hooks/useAuth'
 import type { NextPage } from 'next'

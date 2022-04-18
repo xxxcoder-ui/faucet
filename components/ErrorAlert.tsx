@@ -10,30 +10,31 @@ interface IErrorAlertProps {
   setError: (message: string) => void
 }
 
-export const ErrorAlert = ({ error, setError }: IErrorAlertProps) => {
-  return (
-    <Box sx={{ width: '100%' }}>
-      <Collapse in={!!error}>
-        <Alert
-          severity='error'
-          action={
-            <IconButton
-              aria-label='close'
-              color='inherit'
-              size='small'
-              onClick={() => {
-                setError('')
-              }}
-            >
-              <CloseIcon fontSize='medium' />
-            </IconButton>
-          }
-          sx={{ mb: 2 }}
-        >
-          <AlertTitle>Error</AlertTitle>
-          {error}
-        </Alert>
-      </Collapse>
-    </Box>
-  )
-}
+export const ErrorAlert = ({
+  error,
+  setError,
+}: IErrorAlertProps): JSX.Element => (
+  <Box sx={{ width: '100%' }}>
+    <Collapse in={!!error}>
+      <Alert
+        severity='error'
+        action={
+          <IconButton
+            aria-label='close'
+            color='inherit'
+            size='small'
+            onClick={() => {
+              setError('')
+            }}
+          >
+            <CloseIcon fontSize='medium' />
+          </IconButton>
+        }
+        sx={{ mb: 2 }}
+      >
+        <AlertTitle>Error</AlertTitle>
+        {error}
+      </Alert>
+    </Collapse>
+  </Box>
+)
