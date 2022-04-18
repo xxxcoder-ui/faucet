@@ -1,11 +1,8 @@
 import {
   ALLOWED_NETWORKS_MAP,
-  MUMBAI_ERC20_TOKEN_ADDRESS,
-  POLYGON_ERC20_TOKEN_ADDRESS,
   MIN_REQUIRED_FWEB3_FOR_MATIC,
-  MUMBAI_ADMIN_NFT_ADDRESS,
-  POLYGON_ADMIN_NFT_ADDRESS,
 } from '../constants'
+
 import { ethers } from 'ethers'
 import { IAuthState, useAuth } from './useAuth'
 import { IMoralisResponse } from '../lib/types'
@@ -14,6 +11,7 @@ import { MoralisContextValue, useMoralis } from 'react-moralis'
 import { useEffect, useState } from 'react'
 import { useMoralisWeb3Api } from 'react-moralis'
 import { useNetwork } from './useNetwork'
+import { getContractAddresses } from '../contracts/addresses'
 
 export interface IPermissionsState {
   isAdmin: boolean
@@ -106,34 +104,16 @@ interface IRequestOptions {
   token_address?: string
 }
 
-const _erc20AddressToUse = (chainId: string) => {
-  if (chainId === '0x13881') {
-    return MUMBAI_ERC20_TOKEN_ADDRESS
-  } else if (chainId === '0x89') {
-    return POLYGON_ERC20_TOKEN_ADDRESS
-  } else {
-    return ''
-  }
-}
-
-const _adminNFTAddressToUse = (chainId: string): string => {
-  if (chainId === '0x13881') {
-    return MUMBAI_ADMIN_NFT_ADDRESS
-  } else if (chainId === '0x89') {
-    return POLYGON_ADMIN_NFT_ADDRESS
-  } else {
-    return ''
-  }
-}
-
 const _createBalanceRequestOptions = (
   chainId: string,
   address: string
 ): IRequestOptions => {
+  const networkName = ALLOWED_NETWORKS_MAP[chainId]
+  const fweb3TokenAddress = getContractAddresses(networkName, ['fweb3Token'])
   return {
     chain: chainId,
     address,
-    token_addresses: [_erc20AddressToUse(chainId)],
+    token_addresses: [fweb3TokenAddress],
   }
 }
 
@@ -141,9 +121,11 @@ const _createNFTRequestOptions = (
   chainId: string,
   address: string
 ): IRequestOptions => {
+  const networkName = ALLOWED_NETWORKS_MAP[chainId]
+  const adminNftAddress = getContractAddresses(networkName, ['fweb3AdminNft'])
   return {
     chain: chainId,
     address,
-    token_address: _adminNFTAddressToUse(chainId),
+    token_address: adminNftAddress,
   }
 }

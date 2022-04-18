@@ -1,5 +1,5 @@
 import { AuthProvider, NetworkProvider } from '../hooks'
-import { createTheme, ThemeProvider } from '@mui/material/styles'
+import { ThemeProvider } from '@mui/material/styles'
 import { Layout } from '../components/Layout'
 import { MORALIS_APP_ID, MORALIS_SERVER_URL } from '../constants'
 import { MoralisProvider } from 'react-moralis'

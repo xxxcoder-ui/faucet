@@ -1,9 +1,9 @@
 export const parseMaticErrorReason = ({ message }: any): string => {
-  const notEnoughRequiredTokens: boolean = message.includes('missing erc20')
-  const faucetDisabled: boolean = message.includes('disabled')
-  const faucetDry: boolean = message.includes('insufficient funds')
-  const hasAlreadyUsed: boolean = message.includes('already used')
-  const tooSoonForAnotherDrip: boolean = message.includes('too soon')
+  const notEnoughRequiredTokens: boolean = message?.includes('missing erc20')
+  const faucetDisabled: boolean = message?.includes('disabled')
+  const faucetDry: boolean = message?.includes('insufficient funds')
+  const hasAlreadyUsed: boolean = message?.includes('already used')
+  const tooSoonForAnotherDrip: boolean = message?.includes('too soon')
   if (notEnoughRequiredTokens) {
     return 'You dont have enough required erc20 tokens to use this faucet'
   }
@@ -21,4 +21,8 @@ export const parseMaticErrorReason = ({ message }: any): string => {
   }
   console.error(message)
   return 'An unknown error occured'
+}
+
+export const parseFweb3ErrorReason = (message: string) => {
+  return message
 }

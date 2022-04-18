@@ -1,7 +1,6 @@
 import { LoadingOverlay } from '../LoadingOverlay'
 import { useState } from 'react'
 import Box from '@mui/material/Box'
-import ButtonGroup from '@mui/material/ButtonGroup'
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
 import { ALLOWED_NETWORKS_MAP, NETWORKS } from '../../constants'

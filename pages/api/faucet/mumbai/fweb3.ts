@@ -1,4 +1,10 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import {
+  IEthersInterfaces,
+  parseFweb3ErrorReason,
+  createInterfaces,
+  dripFweb3,
+} from './../../../../lib'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function handler(
@@ -6,9 +12,10 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    res.status(200).json({})
+    const tx = await dripFweb3(req)
+    res.status(200).json({ status: 'ok', data: tx })
   } catch (err: any) {
-    const error: string = err?.message || 'cannot process request'
-    res.status(500).json({ error, status: 'error' })
+    const reason: string = parseFweb3ErrorReason(err?.message)
+    res.status(500).json({ error: reason, status: 'error' })
   }
 }

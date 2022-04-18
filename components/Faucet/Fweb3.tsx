@@ -26,7 +26,6 @@ export const Fweb3Button = ({
       const uri: string = `/api/faucet/${apiRoute}/fweb3?address=${account}`
       const faucetResponse: Response = await fetch(uri)
       const res = await faucetResponse.json()
-      console.log({ res })
       const {
         error,
         data: { transactionHash },

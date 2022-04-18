@@ -3,7 +3,7 @@ import {
   IEthersInterfaces,
   IFaucetResponse,
   dripMatic,
-  createLocalInterfaces,
+  createInterfaces,
   parseMaticErrorReason,
 } from '../../../../lib'
 import type { NextApiRequest, NextApiResponse } from 'next'
@@ -13,11 +13,9 @@ export default async function handler(
   res: NextApiResponse<IFaucetResponse>
 ) {
   try {
-    const interfaces: IEthersInterfaces = await createLocalInterfaces(req.query)
-    const tx = await dripMatic(interfaces)
+    const tx = await dripMatic(req)
     res.status(200).json({ status: 'ok', data: tx })
   } catch (err: any) {
-    console.log({ err })
     const reason: string = parseMaticErrorReason(err)
     res.status(200).json({ error: reason, status: 'error' })
   }

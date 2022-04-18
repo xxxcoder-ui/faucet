@@ -1,5 +1,18 @@
 import { BigNumber, ethers } from 'ethers'
 
+export interface IInterfaceConfig {
+  recipient: string
+  action: string
+  network: string
+  type: string
+}
+
+export enum NETWORKS {
+  MUMBAI = 'mumbai',
+  LOCAL = 'local',
+  POLYGON = 'polygon',
+}
+
 export interface IEthersInterfaces {
   recipient: string
   provider: ethers.providers.InfuraProvider | ethers.providers.JsonRpcProvider
@@ -31,27 +44,6 @@ export interface IFaucetResponse {
   error?: string
   data?: ethers.providers.TransactionReceipt | IMoralisResponse
 }
-
-export interface ITXResponse {
-  to: string
-  from: string
-  contractAddress: Nullable<string>
-  transactionIndex: number
-  gasUsed: BigNumber
-  logsBloom: string
-  blockHash: string
-  transactionHash: string
-  logs: any[]
-  blockNumber: number
-  confirmations: number
-  cumulativeGasUsed: BigNumber
-  effectiveGasPrice: BigNumber
-  status: number
-  type: number
-  byzantium: boolean
-  events: any[]
-}
-
 export interface IGasFees {
   maxFeePerGas?: string
   maxPriorityFeePerGas?: string

@@ -11,7 +11,9 @@ export const SplashScreen = () => {
       color='aliceblue'
     >
       <Typography variant='h1'>Fweb3 Faucet</Typography>
-      <Typography variant='h4'>Please Connect Wallet</Typography>
+      <Typography variant='h4' sx={{
+        color: 'red'
+      }}>Please Connect Wallet</Typography>
     </Box>
   )
 }

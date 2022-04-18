@@ -1,11 +1,13 @@
+import { getContractAddresses } from './../contracts/addresses/index';
 import { IEthersInterfaces } from './types'
-import { LOCAL_MATIC_FAUCET_ADDRESS } from '../constants'
 import { ethers } from 'ethers'
 
 export const getLocalFaucetBalance = async ({
   provider,
 }: IEthersInterfaces) => {
-  const balance = await provider.getBalance(LOCAL_MATIC_FAUCET_ADDRESS)
+  const balance = await provider.getBalance(
+    getContractAddresses('local', ['fweb3EthFaucet'])
+  )
   return balance.toString()
 }
 
@@ -14,7 +16,7 @@ export const depositLocalMatic = async ({
 }: IEthersInterfaces): Promise<ethers.providers.TransactionReceipt> => {
   const tx: ethers.providers.TransactionResponse = await wallet.sendTransaction(
     {
-      to: LOCAL_MATIC_FAUCET_ADDRESS,
+      to: getContractAddresses('local', ['fweb3EthFaucet']),
       value: ethers.utils.parseEther('1'),
     }
   )

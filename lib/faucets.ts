@@ -1,12 +1,17 @@
+import { NextApiRequest } from 'next'
+import { createInterfaces } from './interfaces'
 import { BigNumber, ethers } from 'ethers'
 import { canAffordToDripMatic } from './gas'
 import { IEthersInterfaces } from './types'
+export const dripFweb3 = async (req: NextApiRequest) => {}
 
 export const dripMatic = async (
-  interfaces: IEthersInterfaces
+  req: NextApiRequest
 ): Promise<ethers.providers.TransactionReceipt> => {
+  const interfaces = await createInterfaces(req)
   const canAfford: boolean = await canAffordToDripMatic(interfaces)
   const contractHasFunds: boolean = await _faucetHasFunds(interfaces)
+
   if (!canAfford) {
     throw new Error('Owner cant afford gas')
   }
@@ -24,7 +29,6 @@ const _faucetHasFunds = async ({
   faucetAddress,
 }: IEthersInterfaces): Promise<boolean> => {
   const faucetBalance: BigNumber = await provider.getBalance(faucetAddress)
-  console.log({ faucetBalance: faucetBalance.toString() })
   return faucetBalance.gt(0)
 }
 

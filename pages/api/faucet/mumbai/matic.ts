@@ -1,10 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import {
-  IEthersInterfaces,
-  parseMaticErrorReason,
-  createMumbaiInterfaces,
-  dripMatic,
-} from './../../../../lib'
+import { parseMaticErrorReason, dripMatic } from './../../../../lib'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function handler(
@@ -12,8 +7,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const interfaces: IEthersInterfaces = await createMumbaiInterfaces(req.query)
-    const tx = await dripMatic(interfaces)
+    const tx = await dripMatic(req)
     res.status(200).json({ status: 'ok', data: tx })
   } catch (err: any) {
     const reason: string = parseMaticErrorReason(err?.message)
