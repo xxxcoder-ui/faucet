@@ -1,5 +1,5 @@
 import { LoadingOverlay } from '../LoadingOverlay'
-import { useState, createRef } from 'react'
+import { useState } from 'react'
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
@@ -36,7 +36,6 @@ export const FaucetForm = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
   const theme = useTheme()
-  const recaptchaRef = createRef()
 
   const styles = {
     container: {
@@ -53,7 +52,7 @@ export const FaucetForm = () => {
     alignItems: 'center',
   }
 
-  const handleCapatcha = async (token: string) => {
+  const handleCapatcha = async (token: string | null) => {
     if (token) {
       setStartCapatcha(false)
       await handleFaucetSubmit()
@@ -113,7 +112,6 @@ export const FaucetForm = () => {
             <ReCAPTCHA
               sitekey='6Ld13o4fAAAAAMByXu-GE5J34kq_hoUDZRd9tMFy'
               onChange={handleCapatcha}
-              ref={recaptchaRef}
             />
           </Container>
         ) : (
