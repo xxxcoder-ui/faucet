@@ -7,8 +7,8 @@ type Provider =
 
 export const getProvider = (network: string): Provider => {
   if (network !== 'local') {
-    console.log('not local')
     const netName = network === 'polygon' ? 'matic' : 'maticmum'
+    console.log(`infura provider: ${netName}`)
     return new ethers.providers.InfuraProvider(netName, {
       projectId: process.env.INFURA_PROJECT_ID,
       projectSecret: process.env.INFURA_PROJECT_SECRET,
