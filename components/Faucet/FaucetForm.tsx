@@ -73,8 +73,9 @@ export const FaucetForm = () => {
       setLoading(true)
       const uri = `/api/faucet?network=${apiRoute}&type=fweb3&account=${account}`
       const faucetResponse: Response = await fetch(uri)
-      const { error, transactionHash } = await faucetResponse.json()
-
+      const data = await faucetResponse.json()
+      const { error, transactionHash } = data
+      console.log({ txResponseData: data })
       if (error) {
         setError(error)
       } else if (!transactionHash) {
