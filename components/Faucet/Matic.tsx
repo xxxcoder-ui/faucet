@@ -23,7 +23,7 @@ export const MaticButton = ({
     try {
       setError('')
       setLoading(true)
-      const uri = `/api/faucet/${apiRoute}/matic?address=${account}`
+      const uri = `/api/faucet?network=${apiRoute}&type=matic&account=${account}`
       const faucetResponse: Response = await fetch(uri)
       const { error, data } = await faucetResponse.json()
 

@@ -1,24 +1,17 @@
-import { BigNumber, ethers } from 'ethers'
+import { ethers } from 'ethers'
 
-export interface IInterfaceConfig {
-  recipient: string
-  action: string
+export interface IFaucetRequest {
   network: string
-  type: string
+  type?: string
+  account?: string
+  amount?: string
+  faucetContractName?: string
 }
 
-export enum NETWORKS {
-  MUMBAI = 'mumbai',
-  LOCAL = 'local',
-  POLYGON = 'polygon',
-}
-
-export interface IEthersInterfaces {
-  recipient: string
-  provider: ethers.providers.InfuraProvider | ethers.providers.JsonRpcProvider
+export interface IEthersInterfaces extends IFaucetRequest {
+  provider: Provider
   wallet: ethers.Wallet
   contract: ethers.Contract
-  faucetAddress: string
 }
 
 export interface IMoralisResponse {
@@ -49,3 +42,7 @@ export interface IGasFees {
   maxPriorityFeePerGas?: string
   gasPrice?: string
 }
+
+export type Provider =
+  | ethers.providers.JsonRpcProvider
+  | ethers.providers.InfuraProvider

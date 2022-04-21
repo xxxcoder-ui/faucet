@@ -7,7 +7,6 @@ const syncAndWrite = (addressesPath: string, jsonPath: string): void => {
       fweb3DiamondNft: '',
       fweb3Erc20Faucet: '',
       fweb3EthFaucet: '',
-      fweb3Faucet: '',
       fweb3Game: '',
       fweb3Poll: '',
       fweb3Token: '',
@@ -25,6 +24,7 @@ const syncAndWrite = (addressesPath: string, jsonPath: string): void => {
     }
     fs.writeFileSync(jsonPath, JSON.stringify(addresses))
     console.log('synced local')
+    console.log({ addresses })
   } catch (e) {
     console.error(e)
     process.exit(1)

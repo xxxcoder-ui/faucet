@@ -3,11 +3,15 @@ import { IEthersInterfaces, IGasFees } from './types'
 
 export const canAffordToDripMatic = async ({
   contract,
-  wallet,
 }: IEthersInterfaces): Promise<boolean> => {
-  const estimate: BigNumber = await contract.estimateGas.dripEth(wallet.address)
-  const currentBalance: BigNumber = await wallet.getBalance()
-  return currentBalance.sub(estimate).gt(0)
+  console.log('can afford matic drip?')
+  const estimate: BigNumber = await contract.estimateGas.dripEth(contract.address)
+  console.log(`gas estimate: ${estimate.toString()}`)
+  const currentBalance: BigNumber = await contract.getBalance()
+  console.log(`current matic faucet contract [${contract.address}] balance: ${currentBalance.toString()}`)
+  const canAfford = currentBalance.sub(estimate).gt(0)
+  console.log(`faucet can afford [${canAfford}]`)
+  return canAfford
 }
 
 export const gasInfo = async ({ provider }: IEthersInterfaces) => {

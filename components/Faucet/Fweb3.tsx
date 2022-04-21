@@ -13,7 +13,7 @@ export const Fweb3Button = ({
   setError,
   setLoading,
   setScannerUrl,
-  setTransaction
+  setTransaction,
 }: IFaucetButtonProps): JSX.Element => {
   const { canUseFweb3Faucet }: IPermissionsState = usePermissions()
   const { chainId, account }: MoralisContextValue = useMoralis()
@@ -23,18 +23,19 @@ export const Fweb3Button = ({
     try {
       setError('')
       setLoading(true)
-      const uri: string = `/api/faucet/${apiRoute}/fweb3?address=${account}`
+      const uri = `/api/faucet?network=${apiRoute}&type=fweb3&account=${account}`
       const faucetResponse: Response = await fetch(uri)
-      const res = await faucetResponse.json()
-      const {
-        error,
-        data: { transactionHash },
-      } = res
+      const { error, data } = await faucetResponse.json()
+
       if (error) {
         setError(error)
+      } else if (!data?.transactionHash) {
+        setError(
+          'No tx receipt was received. Please check your wallet for confirmation'
+        )
       } else {
-        setTransaction(transactionHash)
-        setScannerUrl(createScannerUrl(chainId || '', transactionHash))
+        setTransaction(data?.transactionHash)
+        setScannerUrl(createScannerUrl(chainId || '', data?.transactionHash))
       }
       setLoading(false)
     } catch (e: any) {

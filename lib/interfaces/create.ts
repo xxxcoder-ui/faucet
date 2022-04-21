@@ -1,50 +1,42 @@
+import { IFaucetRequest, Provider } from './../types';
 import { createContract } from './contract'
 import { createProvider } from './providers'
 import { createWallet } from './wallet'
 import { ethers } from 'ethers'
-import { getContractAddresses } from '../../contracts/addresses'
-import { IEthersInterfaces, IInterfaceConfig } from '../types'
-import { NextApiRequest } from 'next/types'
+import { IEthersInterfaces } from '../types'
 
-export const createInterfaces = async (
-  req: NextApiRequest
+export const createFaucetInterfaces = async (
+  faucetRequest: IFaucetRequest
 ): Promise<IEthersInterfaces> => {
-  const config: IInterfaceConfig = _createInterfaceConfig(req)
-  const provider:
-    | ethers.providers.JsonRpcProvider
-    | ethers.providers.InfuraProvider = await createProvider(config)
-  const wallet = await createWallet(provider, config)
-  const contract: ethers.Contract = await createContract(wallet, config)
-  const faucetAddress: string = getContractAddresses(config.network, [
-    'fweb3EthFaucet',
-  ])
-  return {
-    faucetAddress,
+  console.log('creating faucet interfaces')
+  const provider: Provider = await createProvider(faucetRequest)
+  const wallet = await createWallet(provider, faucetRequest)
+  const contract: ethers.Contract = await createContract(wallet, faucetRequest)
+  const interfaces = {
     provider,
     wallet,
     contract,
-    ...config,
+    account: _validAddress(faucetRequest.account || ''),
+    ...faucetRequest
   }
+  return interfaces
 }
 
-const _createInterfaceConfig = (req: NextApiRequest): IInterfaceConfig => {
-  const recipient: string = _validAddress(req?.query?.address) // throws
-  const splitUrl: string[] = req?.url?.split('/') || []
-  const action: string = splitUrl[2] || ''
-  const network: string = splitUrl[3] || ''
-  const type: string = splitUrl[4].split('?')[0] || ''
+export const createDepositInterfaces = async (faucetRequest: IFaucetRequest) => {
+  const provider: Provider = await createProvider(faucetRequest)
+  const wallet = await createWallet(provider, faucetRequest)
+  const contract = await createContract(wallet, faucetRequest)
   return {
-    recipient,
-    action,
-    network,
-    type,
+    provider,
+    wallet,
+    contract,
+    ...faucetRequest
   }
 }
 
-const _validAddress = (address: string | string[]): string => {
-  if (Array.isArray(address)) {
-    return address[0]
-  }
+
+
+const _validAddress = (address: string): string => {
   if (/^0x[a-fA-F0-9]{40}$/.test(address)) {
     return address
   }

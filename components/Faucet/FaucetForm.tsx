@@ -81,7 +81,7 @@ export const FaucetForm = () => {
               </Link>
             </Container>
           )}
-          {error && <Typography>{error}</Typography>}
+          {error && <Typography>{JSON.stringify(error, null, 2)}</Typography>}
         </Paper>
       </Box>
     </>

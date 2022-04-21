@@ -1,25 +1,20 @@
-import { getContractAddresses } from './../contracts/addresses/index';
-import { IEthersInterfaces } from './types'
-import { ethers } from 'ethers'
+import { NextApiRequest } from 'next'
+import { IFaucetRequest } from './types'
 
-export const getLocalFaucetBalance = async ({
-  provider,
-}: IEthersInterfaces) => {
-  const balance = await provider.getBalance(
-    getContractAddresses('local', ['fweb3EthFaucet'])
-  )
-  return balance.toString()
-}
+import { createDepositInterfaces, getFaucetContractName } from './interfaces'
 
-export const depositLocalMatic = async ({
-  wallet,
-}: IEthersInterfaces): Promise<ethers.providers.TransactionReceipt> => {
-  const tx: ethers.providers.TransactionResponse = await wallet.sendTransaction(
-    {
-      to: getContractAddresses('local', ['fweb3EthFaucet']),
-      value: ethers.utils.parseEther('1'),
-    }
-  )
-  const receipt = await tx.wait()
+export const depositFaucetFunds = async (req: NextApiRequest) => {
+  const faucetRequest: IFaucetRequest = req.body
+  const faucetContractName = getFaucetContractName(faucetRequest.type || '')
+  const interfaces = await createDepositInterfaces({
+    faucetContractName,
+    ...faucetRequest,
+  })
+  console.log('wallet:', interfaces.wallet.address)
+  const tx = await interfaces.wallet.sendTransaction({
+    to: interfaces.contract.address,
+    value: interfaces.amount,
+  })
+  const receipt = tx.wait()
   return receipt
 }

@@ -1,16 +1,19 @@
-import { IInterfaceConfig } from './../types'
+import { IFaucetRequest, Provider } from './../types'
 import { ethers } from 'ethers'
 
 export const createWallet = async (
-  provider: ethers.providers.InfuraProvider | ethers.providers.JsonRpcProvider,
-  { network, type }: IInterfaceConfig
+  provider: Provider,
+  { network, type }: IFaucetRequest
 ): Promise<ethers.Wallet> => {
-  const privk: string = _getPrivKey(network, type)
+  console.log('creating wallet')
+  const privk: string = _getPrivKey(network, type || '')
+  console.log(`has privkey: ${!!privk}`)
   const wallet: ethers.Wallet = new ethers.Wallet(privk, provider)
   return wallet
 }
 
 const _getPrivKey = (network: string, type: string): string => {
   const ENVNAME: string = `${network.toUpperCase()}_${type.toUpperCase()}_PRIVK`
+  console.log(`getting private key from env ${ENVNAME}`)
   return process.env[ENVNAME] ?? ''
 }

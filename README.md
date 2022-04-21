@@ -1,6 +1,7 @@
 # Fweb3 Faucets
 
 WIP
+Note: Running locally is only for the api requests. The frontend is using Moralis and not connected to the local node.
 ## Development
 
 1. Clone the [contracts repo](https://github.com/fweb3/contracts)
@@ -12,6 +13,7 @@ Note: With `NEXT_PUBLIC_DISABLE_PERMISSIONS` unset or false you will need to min
 
 TODO:
 - add fweb3 side
+- add local dev for FE
 - add captcha
 - add user data to account when faucet is used to cut down on api requests
 - add tests

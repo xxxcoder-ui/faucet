@@ -1,30 +1,44 @@
-import { IInterfaceConfig } from './../types'
 import { ethers } from 'ethers'
-import { CONTRACT_ACTION_MAP } from '../../constants'
 import { getContractAddresses } from '../../contracts/addresses'
-import erc20FaucetJson from '../../contracts/abi/fweb3ERC20Faucet.json'
-import ethFaucetJson from '../../contracts/abi/fweb3EthFaucet.json'
-// import fweb3Token from '../../contracts/abi/fweb3Token.json'
-
-const ABI_MAP: any = {
-  matic: ethFaucetJson,
-  fweb3: erc20FaucetJson,
-}
+import { IFaucetRequest, Provider } from './../types'
+import { ABI_MAP } from './abi'
 
 export const createContract = async (
-  wallet: ethers.Wallet,
-  { network, type, action }: IInterfaceConfig
+  wallet: ethers.Wallet | undefined,
+  { network, type, faucetContractName }: IFaucetRequest
 ): Promise<ethers.Contract> => {
-  const contractName: string = _getContractName(type, action)
-  const contractAddress: string = getContractAddresses(network, [contractName])
+  console.log('interfaces > contract > createContract')
+  console.log(`creating ${faucetContractName} for ${type} on ${network}`)
+  const contractAddress: string = getContractAddresses(network, [
+    faucetContractName || '',
+  ])
+  console.log(`found contract address: ${contractAddress}`)
+  const faucetContract: ethers.Contract = new ethers.Contract(
+    contractAddress,
+    ABI_MAP[type || ''].abi,
+    wallet
+  )
+  console.log(`created faucet contract`)
+  return faucetContract
+}
+
+export const loadReadOnlyContract = (
+  contractAddress: string,
+  abi: string,
+  provider: Provider
+) => {
+  console.log('interfaces > contract > loadReadOnlyContract')
+  console.log(`loading readonly contract: ${contractAddress}`)
   const contract: ethers.Contract = new ethers.Contract(
     contractAddress,
-    ABI_MAP[type].abi,
-    wallet
+    abi,
+    provider.getSigner()
   )
   return contract
 }
 
-const _getContractName = (type: string, action: string): string => {
-  return CONTRACT_ACTION_MAP[action][type] || ''
+export const getFaucetContractName = (type: string) => {
+  const contractName = type === 'fweb3' ? 'fweb3Erc20Faucet' : 'fweb3EthFaucet'
+  console.log(`using faucet contract name: ${contractName}`)
+  return contractName
 }
