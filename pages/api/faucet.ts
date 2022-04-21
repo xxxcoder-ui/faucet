@@ -86,6 +86,7 @@ const _getError = (message: string) => {
   const faucetDisabled = message.includes('disabled')
   const faucetDry = message.includes('dry')
   const didNotSend = message.includes('send failed')
+  const missingGas = message.includes('gas required exceeds allowance')
   if (alreadyUsed) {
     return 'Faucet is single use only.'
   }
@@ -107,6 +108,10 @@ const _getError = (message: string) => {
 
   if (didNotSend) {
     return 'The TX did not send. Please try again later'
+  }
+
+  if (missingGas) {
+    return 'Faucet contract needs gas money'
   }
 
   return 'An unknown error occured. Please reach out to #support'
