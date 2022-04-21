@@ -8,7 +8,7 @@ import { Fweb3Button } from './Fweb3'
 import { MaticButton } from './Matic'
 import Link from 'next/link'
 import { Container, useTheme } from '@mui/material'
-import { green } from '@mui/material/colors'
+import { green, red } from '@mui/material/colors'
 import { LargeText } from '../shared/LargeText'
 
 export const createScannerUrl = (
@@ -64,18 +64,22 @@ export const FaucetForm = () => {
                 justifyContent: 'space-between',
               }}
             >
-              <Fweb3Button
-                setError={setError}
-                setLoading={setLoading}
-                setScannerUrl={setScannerUrl}
-                setTransaction={setTransaction}
-              />
-              <MaticButton
-                setError={setError}
-                setLoading={setLoading}
-                setScannerUrl={setScannerUrl}
-                setTransaction={setTransaction}
-              />
+              {error ? null : (
+                <>
+                  <Fweb3Button
+                    setError={setError}
+                    setLoading={setLoading}
+                    setScannerUrl={setScannerUrl}
+                    setTransaction={setTransaction}
+                  />
+                  <MaticButton
+                    setError={setError}
+                    setLoading={setLoading}
+                    setScannerUrl={setScannerUrl}
+                    setTransaction={setTransaction}
+                  />
+                </>
+              )}
             </Box>
           )}
           {transaction && (
@@ -91,7 +95,11 @@ export const FaucetForm = () => {
               )}
             </>
           )}
-          {error && <Typography>{JSON.stringify(error, null, 2)}</Typography>}
+          {error && (
+            <Typography variant='body1' sx={{ color: red[300] }}>
+              {error}
+            </Typography>
+          )}
         </Paper>
       </Box>
     </>

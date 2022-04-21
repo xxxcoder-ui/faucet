@@ -5,8 +5,8 @@ const syncAndWrite = (addressesPath: string, jsonPath: string): void => {
     const addresses: any = {
       fweb3AdminNft: '',
       fweb3DiamondNft: '',
-      fweb3Erc20Faucet: '',
-      fweb3EthFaucet: '',
+      fweb3TokenFaucet: '',
+      fweb3MaticFaucet: '',
       fweb3Game: '',
       fweb3Poll: '',
       fweb3Token: '',

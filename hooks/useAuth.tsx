@@ -29,6 +29,10 @@ const AuthProvider = ({ children }: IDefaultProps) => {
   // }, [shouldReEnableWeb3]) // eslint-disable-line
 
   useEffect(() => {
+    console.log({ account })
+  }, [account])
+
+  useEffect(() => {
     if (isAuthenticated && account && isWeb3Enabled) {
       setIsConnected(true)
     } else {
