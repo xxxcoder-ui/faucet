@@ -3,9 +3,9 @@
 mumbai faucet contracts:
 ```json
 {
-  "fweb3TokenFaucet": "0x804A8A7bA5Cf56AaeEa3aca2aAD31b0E5b2ff4f8",
-  "fweb3MaticFaucet": "0xe567777504e3D517E6B4987D6c318e657f2207Fe",
-  "fweb3Token": "0xd23E658C2E876eFae86dA5b258aA096c09255d91",
+  "fweb3TokenFaucet": "0x9bcEd9E02a88D4d1eA9d0101Ca2c9b296AEd385D",
+  "fweb3MaticFaucet": "0x987879b1e22b01afCd239ECd2FC08ac536900A96",
+  "fweb3Token": "0x3638A79a557D76AE1010505E32A2226F41D4EbDe",
 }
 
 ```
