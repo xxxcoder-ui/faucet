@@ -6,7 +6,7 @@ import fweb3EthFaucetABI from '../../contracts/abi/fweb3EthFaucet.json'
 import fweb3TokenABI from '../../contracts/abi/fweb3Token.json'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-const { DEPLOYER_PRIVK } = process.env
+const { LOCAL_PRIVK, MUMBAI_PRIVK, POLYGON_PRIVK  } = process.env
 
 export default async function handler(
   req: NextApiRequest,
@@ -14,8 +14,9 @@ export default async function handler(
 ) {
   try {
     const { network, type, account } = req.query
+    const privk = _selectPrivk(network.toString())
     const provider = await _getProvider(network.toString())
-    const wallet = await new ethers.Wallet(DEPLOYER_PRIVK || '', provider)
+    const wallet = await new ethers.Wallet(privk || '', provider)
     if (type === 'matic') {
       const maticFaucetAddress = getContractAddress(
         network.toString(),
@@ -80,4 +81,14 @@ const _getProvider = (network: string): Provider => {
     })
   }
   return new ethers.providers.JsonRpcProvider('http://localhost:8545')
+}
+
+const _selectPrivk = (network: string) => {
+  if (network === 'polygon') {
+    return POLYGON_PRIVK
+  } else if (network === 'mumbai') {
+    return MUMBAI_PRIVK
+  } else {
+    return LOCAL_PRIVK
+  }
 }
