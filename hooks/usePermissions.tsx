@@ -5,7 +5,6 @@ import {
 
 import { ethers } from 'ethers'
 import { IAuthState, useAuth } from './useAuth'
-import { IMoralisResponse } from '../tmp/lib/types'
 import { INetworkState } from './useNetwork'
 import { MoralisContextValue, useMoralis } from 'react-moralis'
 import { useEffect, useState } from 'react'
@@ -34,7 +33,7 @@ export const usePermissions = (): IPermissionsState => {
     return res ? res[0] : { balance: '0' }
   }
 
-  const fetchAdminNft = async (): Promise<IMoralisResponse> => {
+  const fetchAdminNft = async () => {
     const opts = chainId && _createNFTRequestOptions(chainId, account || '')
     const { result = [] } = await Web3Api.account.getNFTsForContract(
       opts as any
@@ -51,7 +50,7 @@ export const usePermissions = (): IPermissionsState => {
       return
     }
 
-    const adminNfts: IMoralisResponse = await fetchAdminNft()
+    const adminNfts = await fetchAdminNft()
     const isAdmin: boolean = Object.keys(adminNfts).length !== 0
 
     if (isAdmin) {
