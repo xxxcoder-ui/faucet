@@ -28,7 +28,7 @@ export default async function handler(
     const fweb3Faucet = new ethers.Contract(
       fweb3FaucetAddress,
       fweb3FaucetAbi,
-      provider.getSigner()
+      wallet
     )
 
     const fweb3Token = new ethers.Contract(
@@ -40,7 +40,7 @@ export default async function handler(
     const maticFaucet = new ethers.Contract(
       maticFaucetAddress,
       maticFaucetAbi,
-      provider.getSigner()
+      wallet
     )
     const fweb3Drip = await fweb3Faucet.dripAmount()
     const fweb3Balance = await fweb3Token.balanceOf(fweb3FaucetAddress)

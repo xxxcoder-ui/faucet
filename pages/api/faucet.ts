@@ -70,8 +70,11 @@ export default async function handler(
       res.status(200).json(receipt)
     }
   } catch (err: any) {
-    console.error(JSON.stringify(err, null, 2))
-    res.status(500).json({ error: _getError(err?.message), status: 'error' })
+    const raw = JSON.stringify(err, null, 2)
+    console.error()
+    res
+      .status(500)
+      .json({ error: _getError(err?.message), status: 'error', raw })
   }
 }
 
