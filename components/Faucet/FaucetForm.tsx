@@ -54,32 +54,42 @@ export const FaucetForm = () => {
       <Box sx={styles.container}>
         <Paper elevation={24} sx={styles.form}>
           <LargeText text='Fweb3 Faucet (beta)' />
-          <Box m={3} sx={{
-            display: 'flex',
-            justifyContent: 'space-between'
-          }}>
-            <Fweb3Button
-              setError={setError}
-              setLoading={setLoading}
-              setScannerUrl={setScannerUrl}
-              setTransaction={setTransaction}
-            />
-            <MaticButton
-              setError={setError}
-              setLoading={setLoading}
-              setScannerUrl={setScannerUrl}
-              setTransaction={setTransaction}
-            />
-          </Box>
-          {scannerUrl && (
-            <Container>
+          {transaction ? (
+            <Typography variant='h4'>Success!</Typography>
+          ) : (
+            <Box
+              m={3}
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+              }}
+            >
+              <Fweb3Button
+                setError={setError}
+                setLoading={setLoading}
+                setScannerUrl={setScannerUrl}
+                setTransaction={setTransaction}
+              />
+              <MaticButton
+                setError={setError}
+                setLoading={setLoading}
+                setScannerUrl={setScannerUrl}
+                setTransaction={setTransaction}
+              />
+            </Box>
+          )}
+          {transaction && (
+            <>
+              <Typography>Transaction Hash</Typography>
               <Typography>{transaction}</Typography>
-              <Link href={scannerUrl} passHref>
-                <Typography variant='body1' sx={{ color: green[500] }}>
-                  View on polygonscan
-                </Typography>
-              </Link>
-            </Container>
+              {scannerUrl && (
+                <Link href={scannerUrl} passHref>
+                  <Typography variant='body1' sx={{ color: green[500] }}>
+                    View on polygonscan
+                  </Typography>
+                </Link>
+              )}
+            </>
           )}
           {error && <Typography>{JSON.stringify(error, null, 2)}</Typography>}
         </Paper>

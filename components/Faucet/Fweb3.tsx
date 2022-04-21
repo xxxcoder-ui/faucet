@@ -25,17 +25,17 @@ export const Fweb3Button = ({
       setLoading(true)
       const uri = `/api/faucet?network=${apiRoute}&type=fweb3&account=${account}`
       const faucetResponse: Response = await fetch(uri)
-      const { error, data } = await faucetResponse.json()
+      const { error, transactionHash } = await faucetResponse.json()
 
       if (error) {
         setError(error)
-      } else if (!data?.transactionHash) {
+      } else if (!transactionHash) {
         setError(
           'No tx receipt was received. Please check your wallet for confirmation'
         )
       } else {
-        setTransaction(data?.transactionHash)
-        setScannerUrl(createScannerUrl(chainId || '', data?.transactionHash))
+        setTransaction(transactionHash)
+        setScannerUrl(createScannerUrl(chainId || '', transactionHash))
       }
       setLoading(false)
     } catch (e: any) {

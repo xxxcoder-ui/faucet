@@ -5,13 +5,13 @@ import {
 
 import { ethers } from 'ethers'
 import { IAuthState, useAuth } from './useAuth'
-import { IMoralisResponse } from '../lib/types'
+import { IMoralisResponse } from '../tmp/lib/types'
 import { INetworkState } from './useNetwork'
 import { MoralisContextValue, useMoralis } from 'react-moralis'
 import { useEffect, useState } from 'react'
 import { useMoralisWeb3Api } from 'react-moralis'
 import { useNetwork } from './useNetwork'
-import { getContractAddresses } from '../contracts/addresses'
+import { getContractAddress } from '../contracts/addresses'
 
 export interface IPermissionsState {
   isAdmin: boolean
@@ -109,7 +109,7 @@ const _createBalanceRequestOptions = (
   address: string
 ): IRequestOptions => {
   const networkName = ALLOWED_NETWORKS_MAP[chainId]
-  const fweb3TokenAddress = getContractAddresses(networkName, ['fweb3Token'])
+  const fweb3TokenAddress = getContractAddress(networkName, 'fweb3Token')
   return {
     chain: chainId,
     address,
@@ -122,7 +122,7 @@ const _createNFTRequestOptions = (
   address: string
 ): IRequestOptions => {
   const networkName = ALLOWED_NETWORKS_MAP[chainId]
-  const adminNftAddress = getContractAddresses(networkName, ['fweb3AdminNft'])
+  const adminNftAddress = getContractAddress(networkName, 'fweb3AdminNft')
   return {
     chain: chainId,
     address,

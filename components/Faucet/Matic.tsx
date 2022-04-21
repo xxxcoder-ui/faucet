@@ -25,15 +25,19 @@ export const MaticButton = ({
       setLoading(true)
       const uri = `/api/faucet?network=${apiRoute}&type=matic&account=${account}`
       const faucetResponse: Response = await fetch(uri)
-      const { error, data } = await faucetResponse.json()
-
+      const data = await faucetResponse.json()
+      const { error, transactionHash } = data
       if (error) {
         setError(error)
-      } else if (!data?.transactionHash) {
-        setError('No tx receipt was received. Please check your wallet for confirmation')
+      } else if (!transactionHash) {
+        setError(
+          'No tx receipt was received. Please check your wallet for confirmation'
+        )
       } else {
-        setTransaction(data?.transactionHash)
-        setScannerUrl(createScannerUrl(chainId || '', data?.transactionHash))
+        setTransaction(transactionHash)
+        const scannerUrl = createScannerUrl(chainId || '', transactionHash)
+        console.log({ transactionHash, scannerUrl })
+        setScannerUrl(scannerUrl)
       }
       setLoading(false)
     } catch (e: any) {
