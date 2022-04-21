@@ -67,10 +67,11 @@ export default async function handler(
       })
       const tx = await fweb3FaucetContract.dripFweb3(account)
       const receipt = await tx.wait()
+      console.log({ receipt })
       res.status(200).json(receipt)
     }
   } catch (err: any) {
-    const raw = JSON.stringify(err, null, 2)
+    const raw = JSON.stringify(err?.toString() ?? 'no error spit out!', null, 2)
     console.error(raw)
     res
       .status(500)
