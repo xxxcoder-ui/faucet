@@ -1,17 +1,13 @@
 # Fweb3 Faucets (wip)
 
-mumbai contracts:
+mumbai faucet contracts:
 ```json
 {
-  "fweb3AdminNft": "0x07Dd489aeb1429FE790376489d77E261E3998917",
-  "fweb3DiamondNft": "0xa6ea886e30561df6E8b5D3012b71E01cD5139C12",
-  "fweb3Erc20Faucet": "0x6614438D1FA443b6163F2A655E6C57F3546b3465",
-  "fweb3EthFaucet": "0xc6B8d8BCc80b738e78DAD3F285F0CB2A082445d4",
-  "fweb3Game": "0x55DF5aB9Efe978481A8905d1Fd4b2f99D41c1D34",
-  "fweb3Poll": "0xe3D18630b36Be4afB9E36971AAa7d41f0c0B52E3",
-  "fweb3Token": "0x30fBc356F2AcC79F18121C736867bB1CcA535b22",
-  "fweb3Trophy": "0x81D9717F25519DFefF30A7708826ee6Bb2785ab2"
+  "fweb3TokenFaucet": "0x804A8A7bA5Cf56AaeEa3aca2aAD31b0E5b2ff4f8",
+  "fweb3MaticFaucet": "0xe567777504e3D517E6B4987D6c318e657f2207Fe",
+  "fweb3Token": "0xd23E658C2E876eFae86dA5b258aA096c09255d91",
 }
+
 ```
 
 ## Development
