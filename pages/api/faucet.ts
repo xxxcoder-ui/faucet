@@ -71,7 +71,7 @@ export default async function handler(
     }
   } catch (err: any) {
     const raw = JSON.stringify(err, null, 2)
-    console.error()
+    console.error(raw)
     res
       .status(500)
       .json({ error: _getError(err?.message), status: 'error', raw })

@@ -20,10 +20,13 @@ export const getProvider = (network: string): Provider => {
 
 export const getPrivk = (network: string) => {
   if (network === 'polygon') {
+    console.log('using polygon wallet')
     return POLYGON_PRIVK
   } else if (network === 'mumbai') {
+    console.log('using mumbai wallet')
     return MUMBAI_PRIVK
   } else {
+    console.log('using local wallet')
     return LOCAL_PRIVK
   }
 }
