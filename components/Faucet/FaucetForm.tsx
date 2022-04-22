@@ -29,9 +29,10 @@ export const createScannerUrl = (
 
 export const FaucetForm = () => {
   const { chainId, account }: MoralisContextValue = useMoralis()
-  const [startCapatcha, setStartCapatcha] = useState<boolean>(false)
+  const [startCapatcha, setStartCapatcha] = useState<boolean>(true)
   const { apiRoute }: INetworkState = useNetwork()
   const [transaction, setTransaction] = useState<string>('')
+  const [faucetType, setFaucetType] = useState<string>('')
   const [scannerUrl, setScannerUrl] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
@@ -55,23 +56,23 @@ export const FaucetForm = () => {
   const handleCapatcha = async (token: string | null) => {
     if (token) {
       setStartCapatcha(false)
-      await handleFaucetSubmit()
+      await handleFaucetSubmit(faucetType)
       return
     }
     setStartCapatcha(false)
     setError('Failed capatcha')
   }
 
-  const showCapatcha = () => {
-    console.log('show capatcha')
+  const triggerFaucetRequest = (type: string) => {
     setStartCapatcha(true)
+    setFaucetType(type)
   }
 
-  const handleFaucetSubmit = async (): Promise<void> => {
+  const handleFaucetSubmit = async (faucetType: string): Promise<void> => {
     try {
       setError('')
       setLoading(true)
-      const uri = `/api/faucet?network=${apiRoute}&type=fweb3&account=${account}`
+      const uri = `/api/faucet?network=${apiRoute}&type=${faucetType}&account=${account}`
       const faucetResponse: Response = await fetch(uri)
       const data = await faucetResponse.json()
       const { error, transactionHash } = data
@@ -102,13 +103,12 @@ export const FaucetForm = () => {
       <Box sx={styles.container}>
         {startCapatcha ? (
           <Container
-            sx={
-              {
-                // display: 'flex',
-                // justifyContent: 'center',
-                // alignItems: 'center',
-              }
-            }
+            sx={{
+              height: '100vh',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
           >
             <ReCAPTCHA
               sitekey='6Ld13o4fAAAAAMByXu-GE5J34kq_hoUDZRd9tMFy'
@@ -130,8 +130,8 @@ export const FaucetForm = () => {
               >
                 {error ? null : (
                   <>
-                    <Fweb3Button handleSubmit={showCapatcha} />
-                    <MaticButton handleSubmit={showCapatcha} />
+                    <Fweb3Button handleSubmit={triggerFaucetRequest} />
+                    <MaticButton handleSubmit={triggerFaucetRequest} />
                   </>
                 )}
               </Box>

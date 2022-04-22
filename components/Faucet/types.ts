@@ -1,5 +1,5 @@
 export interface IFaucetButtonProps {
-  handleSubmit: () => void
+  handleSubmit: (type: string) => void
 }
 
 export interface IButtonProps {
