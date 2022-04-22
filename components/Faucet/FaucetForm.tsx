@@ -29,7 +29,7 @@ export const createScannerUrl = (
 
 export const FaucetForm = () => {
   const { chainId, account }: MoralisContextValue = useMoralis()
-  const [startCapatcha, setStartCapatcha] = useState<boolean>(true)
+  const [startCapatcha, setStartCapatcha] = useState<boolean>(false)
   const { apiRoute }: INetworkState = useNetwork()
   const [transaction, setTransaction] = useState<string>('')
   const [faucetType, setFaucetType] = useState<string>('')
