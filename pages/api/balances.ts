@@ -44,12 +44,13 @@ export default async function handler(
     )
     const fweb3Drip = await fweb3Faucet.dripAmount()
     const fweb3Balance = await fweb3Token.balanceOf(fweb3FaucetAddress)
+    const fweb3MaticBalance = await provider.getBalance(fweb3FaucetAddress)
     const maticDrip = await maticFaucet.dripAmount()
     const maticFaucetBalance = await provider.getBalance(maticFaucetAddress)
-
     res.status(200).json({
       fweb3: {
         balance: fweb3Balance.toString(),
+        matic_gas: fweb3MaticBalance.toString(),
         drip: fweb3Drip.toString(),
       },
       matic: {

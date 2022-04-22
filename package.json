@@ -6,7 +6,7 @@
     "localdev": "NEXT_APP_LOCALNET=true next dev",
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "NODE_OPTIONS='--http-server-default-timeout=0' next start",
     "lint": "next lint",
     "sync:local": "npx ts-node -O '{\"module\":\"commonjs\"}' scripts/sync.ts local",
     "sync:mumbai": "npx ts-node -O '{\"module\":\"commonjs\"}' scripts/sync.ts mumbai",

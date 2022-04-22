@@ -1,16 +1,9 @@
-import {
-  INetworkState,
-  IPermissionsState,
-  useNetwork,
-  usePermissions,
-} from '../../hooks'
-import { createScannerUrl } from './FaucetForm'
+import { IPermissionsState, usePermissions } from '../../hooks'
 import { FaucetButton } from './FaucetButton'
 import { IFaucetButtonProps } from './types'
-import { MoralisContextValue, useMoralis } from 'react-moralis'
 
 export const MaticButton = ({
-  handleSubmit
+  handleSubmit,
 }: IFaucetButtonProps): JSX.Element => {
   const { canUseMaticFaucet }: IPermissionsState = usePermissions()
   const tooltip = canUseMaticFaucet
@@ -21,7 +14,7 @@ export const MaticButton = ({
     <FaucetButton
       text='MATIC'
       disabled={!canUseMaticFaucet}
-      handler={handleSubmit}
+      handler={() => handleSubmit('matic')}
       tooltip={tooltip}
     />
   )

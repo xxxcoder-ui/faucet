@@ -1,16 +1,9 @@
-import {
-  INetworkState,
-  IPermissionsState,
-  useNetwork,
-  usePermissions,
-} from '../../hooks'
-import { createScannerUrl } from './FaucetForm'
 import { FaucetButton } from './FaucetButton'
 import { IFaucetButtonProps } from './types'
-import { MoralisContextValue, useMoralis } from 'react-moralis'
+import { IPermissionsState, usePermissions } from '../../hooks'
 
 export const Fweb3Button = ({
-  handleSubmit
+  handleSubmit,
 }: IFaucetButtonProps): JSX.Element => {
   const { canUseFweb3Faucet }: IPermissionsState = usePermissions()
 
@@ -21,7 +14,7 @@ export const Fweb3Button = ({
   return (
     <FaucetButton
       disabled={!canUseFweb3Faucet}
-      handler={handleSubmit}
+      handler={() => handleSubmit('fweb3')}
       tooltip={tooltip}
       text='Fweb3'
     />
