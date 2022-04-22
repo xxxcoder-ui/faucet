@@ -4,15 +4,20 @@ const { LOCAL_PRIVK, MUMBAI_PRIVK, POLYGON_PRIVK } = process.env
 type Provider =
   | ethers.providers.JsonRpcProvider
   | ethers.providers.InfuraProvider
+  | ethers.providers.BaseProvider
 
 export const getProvider = (network: string): Provider => {
   if (network !== 'local') {
     const netName = network === 'polygon' ? 'matic' : 'maticmum'
     console.log(`infura provider: ${netName}`)
-    return new ethers.providers.InfuraProvider(netName, {
-      projectId: process.env.INFURA_PROJECT_ID,
-      projectSecret: process.env.INFURA_PROJECT_SECRET,
+    const provider = ethers.providers.getDefaultProvider(netName, {
+      infura: {
+        projectId: process.env.INFURA_PROJECT_ID,
+        projectSecret: process.env.INFURA_PROJECT_SECRET,
+      },
+      alchemy: process.env.ALCHEMY_API_KEY
     })
+    return provider
   }
   return new ethers.providers.JsonRpcProvider('http://localhost:8545')
 }

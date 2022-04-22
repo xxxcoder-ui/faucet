@@ -18,13 +18,12 @@ export default async function handler(
     const provider = getProvider(network.toString())
     const privk = getPrivk(network.toString()) || ''
     const wallet = new ethers.Wallet(privk, provider)
-
     const fweb3TokenAddress = getContractAddress(network.toString(), 'fweb3Token')
     const maticFaucetAddress = getContractAddress(network.toString(), 'fweb3MaticFaucet')
     const fweb3FaucetAbi = loadAbi('fweb3TokenFaucet')
     const fweb3TokenAbi = loadAbi('fweb3Token')
     const maticFaucetAbi = loadAbi('fweb3MaticFaucet')
-    console.log(fweb3FaucetAbi)
+
     const fweb3Faucet = new ethers.Contract(
       fweb3FaucetAddress,
       fweb3FaucetAbi,
