@@ -56,10 +56,11 @@ export const FaucetForm = () => {
   const handleCapatcha = async (token: string | null) => {
     if (token) {
       setStartCapatcha(false)
-      await handleFaucetSubmit(faucetType)
+      await handleFaucetSubmit()
       return
     }
     setStartCapatcha(false)
+    setFaucetType('')
     setError('Failed capatcha')
   }
 
@@ -68,7 +69,7 @@ export const FaucetForm = () => {
     setFaucetType(type)
   }
 
-  const handleFaucetSubmit = async (faucetType: string): Promise<void> => {
+  const handleFaucetSubmit = async (): Promise<void> => {
     try {
       setError('')
       setLoading(true)
