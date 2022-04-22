@@ -2,16 +2,7 @@ import fs from 'fs-extra'
 
 const syncAndWrite = (addressesPath: string, jsonPath: string): void => {
   try {
-    const addresses: any = {
-      fweb3AdminNft: '',
-      fweb3DiamondNft: '',
-      fweb3TokenFaucet: '',
-      fweb3MaticFaucet: '',
-      fweb3Game: '',
-      fweb3Poll: '',
-      fweb3Token: '',
-      fweb3Trophy: ''
-    }
+    const addresses: any = {}
     const addressFile = fs.readdirSync(addressesPath)
 
     for (const filename of addressFile) {
