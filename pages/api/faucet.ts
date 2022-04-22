@@ -61,13 +61,14 @@ export default async function handler(
       const fweb3FaucetBalance = await fweb3TokenContract.balanceOf(
         fweb3FaucetContract.address
       )
+
+      const tx = await fweb3FaucetContract.dripFweb3(account)
+      const receipt = await tx.wait()
       console.log({
         sent_fweb3_to: account,
         fweb3_faucet_balance: fweb3FaucetBalance.toString(),
+        receipt,
       })
-      const tx = await fweb3FaucetContract.dripFweb3(account)
-      const receipt = await tx.wait()
-      console.log({ receipt })
       res.status(200).json(receipt)
     }
   } catch (err: any) {
@@ -78,7 +79,6 @@ export default async function handler(
       .json({ error: _getError(err?.message), status: 'error', raw })
   }
 }
-
 
 const _getError = (message: string) => {
   const alreadyUsed = message.includes('already used')
