@@ -1,5 +1,14 @@
 # Fweb3 Faucets (wip)
 
+polygon faucet contracts:
+```json
+{
+  "fweb3Token": "0x4a14ac36667b574b08443a15093e417db909d7a3",
+  "maticFaucetAddress": "0xF2d86AEe11351D4396eE2Bd663977C91eE2b0F9b",
+  "fweb3FaucetAddress": "0x4B9C8d77228C2d1A9f52a18812e73940270e250d"
+}
+```
+
 mumbai faucet contracts:
 ```json
 {
