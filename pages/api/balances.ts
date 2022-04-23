@@ -1,5 +1,4 @@
-import { getPrivk } from './../../lib/interfaces';
-import { getProvider } from '../../lib/interfaces'
+import { getPrivk, getProvider } from './../../lib/interfaces'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { ethers } from 'ethers'
 import { loadAbi } from '../../contracts/abi'
@@ -18,8 +17,15 @@ export default async function handler(
     const provider = getProvider(network.toString())
     const privk = getPrivk(network.toString()) || ''
     const wallet = new ethers.Wallet(privk, provider)
-    const fweb3TokenAddress = getContractAddress(network.toString(), 'fweb3Token')
-    const maticFaucetAddress = getContractAddress(network.toString(), 'fweb3MaticFaucet')
+
+    const fweb3TokenAddress = getContractAddress(
+      network.toString(),
+      'fweb3Token'
+    )
+    const maticFaucetAddress = getContractAddress(
+      network.toString(),
+      'fweb3MaticFaucet'
+    )
     const fweb3FaucetAbi = loadAbi('fweb3TokenFaucet')
     const fweb3TokenAbi = loadAbi('fweb3Token')
     const maticFaucetAbi = loadAbi('fweb3MaticFaucet')
@@ -41,11 +47,13 @@ export default async function handler(
       maticFaucetAbi,
       wallet
     )
+
     const fweb3Drip = await fweb3Faucet.dripAmount()
     const fweb3Balance = await fweb3Token.balanceOf(fweb3FaucetAddress)
     const fweb3MaticBalance = await provider.getBalance(fweb3FaucetAddress)
     const maticDrip = await maticFaucet.dripAmount()
     const maticFaucetBalance = await provider.getBalance(maticFaucetAddress)
+
     res.status(200).json({
       fweb3: {
         balance: fweb3Balance.toString(),

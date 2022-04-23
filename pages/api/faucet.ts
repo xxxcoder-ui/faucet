@@ -11,15 +11,17 @@ export default async function handler(
 ) {
   try {
     const { network, type, account } = req.query
+    console.log(`[+] Initializing ${type} request on ${network}`)
     const privk = getPrivk(network.toString())
     const provider = await getProvider(network.toString())
     const wallet = await new ethers.Wallet(privk || '', provider)
+
     if (type === 'matic') {
-      console.log(`sending matic to: ${account}`)
       const maticFaucetAddress = getContractAddress(
         network.toString(),
         'fweb3MaticFaucet'
       )
+
       const maticFaucetAbi = loadAbi('fweb3MaticFaucet')
       const maticFaucetContract = new ethers.Contract(
         maticFaucetAddress,
@@ -27,93 +29,172 @@ export default async function handler(
         wallet
       )
 
-      const tx = await maticFaucetContract.dripMatic(account)
+      // const maticDrip = await maticFaucetContract.dripAmount()
+      // const maticDripDecimals = await maticFaucetContract.getDecimals
+      // const startBalance = await provider.getBalance(maticFaucetAddress)
+
+      // console.log({
+      //   matic_drip_amount: maticDrip.toString(),
+      //   matic_drip_decimals: maticDripDecimals.toString(),
+      //   matic_faucet_start_balance: startBalance.toString(),
+      //   matic_faucet_address: maticFaucetAddress,
+      //   sending_to: account,
+      // })
+
+      const tx = await maticFaucetContract.dripMatic(account, {
+
+      })
       const receipt = await tx.wait()
-      const maticFaucetBalance = await provider.getBalance(
-        maticFaucetContract.address
-      )
+      const endBalance = await provider.getBalance(maticFaucetAddress)
+
       console.log({
         sent_matic_to: account,
-        matic_faucet_balance: maticFaucetBalance.toString(),
+        matic_faucet_end_balance: endBalance.toString(),
+        tx_receipt: tx,
       })
+
       res.status(200).json(receipt)
     } else {
       const fweb3FaucetAddress = getContractAddress(
         network.toString(),
         'fweb3TokenFaucet'
       )
+
       const fweb3TokenAddress = getContractAddress(
         network.toString(),
         'fweb3Token'
       )
+
       const fweb3FaucetAbi = loadAbi('fweb3TokenFaucet')
       const fweb3FaucetContract = new ethers.Contract(
         fweb3FaucetAddress,
         fweb3FaucetAbi,
         wallet
       )
+
       const fweb3TokenAbi = loadAbi('fweb3Token')
       const fweb3TokenContract = new ethers.Contract(
         fweb3TokenAddress,
         fweb3TokenAbi,
         wallet
       )
+
       const fweb3FaucetBalance = await fweb3TokenContract.balanceOf(
         fweb3FaucetContract.address
       )
 
-      const tx = await fweb3FaucetContract.dripFweb3(account)
+      console.log('[+] dripping fweb3...')
+      const tx = await fweb3FaucetContract.dripFweb3(account, {
+        gasLimit: 3000000,
+      })
+
       const receipt = await tx.wait()
+      console.log('[+] success!')
       console.log({
         sent_fweb3_to: account,
         fweb3_faucet_balance: fweb3FaucetBalance.toString(),
-        receipt,
+        tx: receipt.transactionHash,
       })
       res.status(200).json(receipt)
     }
   } catch (err: any) {
-    const raw = JSON.stringify(err?.toString() ?? 'no error spit out!', null, 2)
-    console.error(raw)
-    res
-      .status(500)
-      .json({ error: _getError(err?.message), status: 'error', raw })
+    console.error(JSON.stringify(err, null, 2))
+    res.status(500).json({ error: _getError(err?.message), status: 'error', code: err.code })
   }
 }
 
 const _getError = (message: string) => {
-  const alreadyUsed = message.includes('already used')
-  const tooSoon = message.includes('too soon')
-  const missingFweb3 = message.includes('missing fweb3')
+  const hasLimitOfFweb3 = message.includes('limit') // requirement matches system error
+  const exceedsGasLimit = message.includes('exceeds block gas limit')
+  const missingGas = message.includes('gas required exceeds allowance')
+  const underPriced = message.includes('transaction underpriced')
+  const notEnoughGas = message.includes(
+    'max fee per gas less than block base fee'
+  )
+  const gasTooLowForNextBlock = message.includes(
+    'is too low for the next block'
+  )
+
+  const alreadyUsed = message.includes('used')
+  const tooSoon = message.includes('timeout')
+  const missingFweb3 = message.includes('missing erc20')
+  const alreadyHaveMatic = message.includes('no need')
   const faucetDisabled = message.includes('disabled')
   const faucetDry = message.includes('dry')
   const didNotSend = message.includes('send failed')
-  const missingGas = message.includes('gas required exceeds allowance')
+  const cannotEstimateGas = message.includes('may require manual gas limit')
+
+  console.log({
+    hasLimitOfFweb3,
+    exceedsGasLimit,
+    missingGas,
+    underPriced,
+    notEnoughGas,
+    gasTooLowForNextBlock,
+    alreadyUsed,
+    tooSoon,
+    missingFweb3,
+    alreadyHaveMatic,
+    faucetDisabled,
+    faucetDry,
+    didNotSend,
+    cannotEstimateGas
+  })
+
+  let error = 'An unknown error occured. Please reach out to #support'
+
+  if (hasLimitOfFweb3 && !exceedsGasLimit && !cannotEstimateGas) {
+    error = 'you already enough token to play'
+  }
+
+  if (cannotEstimateGas && !alreadyHaveMatic) {
+    error = 'cant estimate gas. usually congested network. try again later'
+  }
+
+  if (exceedsGasLimit) {
+    error = 'transaction gas exceeds limit'
+  }
+
   if (alreadyUsed) {
-    return 'Faucet is single use only.'
+    error = 'Faucet is single use only.'
   }
   if (tooSoon) {
-    return 'You must wait to use faucet again'
+    error = 'You must wait to use faucet again'
   }
 
   if (missingFweb3) {
-    return 'Matic faucet requires you have the required amount of fweb tokens'
+    error = 'Matic faucet requires you have the required amount of fweb tokens'
   }
 
   if (faucetDisabled) {
-    return 'The faucet is disabled'
+    error = 'The faucet is disabled'
   }
 
   if (faucetDry) {
-    return 'Faucet is out of funds'
+    error = 'Faucet is out of funds'
   }
 
   if (didNotSend) {
-    return 'The TX did not send. Please try again later'
+    error = 'The TX did not send. Please try again later'
   }
 
+  if (notEnoughGas) {
+    error = 'not enough gas'
+  }
+
+  if (gasTooLowForNextBlock) {
+    error = 'gas is too low for next block'
+  }
+
+  if (alreadyHaveMatic) {
+    error = 'you have more than enough already'
+  }
+
+  if (underPriced) {
+    error = 'gas is under priced / unpredictable. wait a few min and try again'
+  }
   if (missingGas) {
-    return 'Faucet contract needs gas money'
+    error = 'Faucet contract needs gas money'
   }
-
-  return 'An unknown error occured. Please reach out to #support'
+  return error
 }
