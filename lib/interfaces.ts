@@ -19,13 +19,6 @@ type Provider =
 export const getProvider = (network: string): Provider => {
   if (network === 'polygon') {
     console.log(`[+] using mainnet provider`)
-    // return ethers.getDefaultProvider('matic', {
-    //   infura: {
-    //     projectId: INFURA_PROJECT_ID,
-    //     projectSecret: INFURA_PROJECT_SECRET,
-    //   },
-    //   alchemy: ALCHEMY_MAINNET_API_KEY,
-    // })
     return new AlchemyProvider('matic', ALCHEMY_MAINNET_API_KEY)
   } else if (network === 'mumbai') {
     console.log(`[+] using mumbai alchemy provider`)

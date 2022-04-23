@@ -5,9 +5,7 @@ import { ethers } from 'ethers'
 import { getContractAddress } from './../../contracts/addresses/index'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { formatError } from '../../lib/errors'
-
-const GAS_LIMIT = 3000000
-
+const { FWEB3_GAS_LIMIT, MATIC_GAS_LIMIT } = process.env
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -15,6 +13,9 @@ export default async function handler(
   try {
     const { network, type, account } = req.query
     console.log(`[+] Initializing ${type} request on ${network}`)
+    console.log(
+      `[+] fweb3 gas limit: ${FWEB3_GAS_LIMIT}, matic gas limit: ${MATIC_GAS_LIMIT}`
+    )
     const privk = getPrivk(network.toString())
 
     if (!privk) {
@@ -38,7 +39,7 @@ export default async function handler(
       )
 
       const tx = await maticFaucetContract.dripMatic(account, {
-        gasLimit: GAS_LIMIT,
+        gasLimit: MATIC_GAS_LIMIT,
       })
       const receipt = await tx.wait()
       const endBalance = await provider.getBalance(maticFaucetAddress)
@@ -81,7 +82,7 @@ export default async function handler(
 
       console.log('[+] dripping fweb3...')
       const tx = await fweb3FaucetContract.dripFweb3(account, {
-        gasLimit: GAS_LIMIT,
+        gasLimit: FWEB3_GAS_LIMIT,
       })
 
       const receipt = await tx.wait()
