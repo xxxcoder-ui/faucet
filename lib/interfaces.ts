@@ -1,42 +1,49 @@
-import { AlchemyProvider } from "@ethersproject/providers"
-import { ethers } from "ethers"
-const { LOCAL_PRIVK, MUMBAI_PRIVK, POLYGON_PRIVK } = process.env
+import { AlchemyProvider, JsonRpcProvider } from '@ethersproject/providers'
+import { ethers } from 'ethers'
+const {
+  LOCAL_PRIVK,
+  MUMBAI_PRIVK,
+  POLYGON_PRIVK,
+  INFURA_PROJECT_ID,
+  INFURA_PROJECT_SECRET,
+  ALCHEMY_MAINNET_API_KEY,
+  ALCHEMY_TESTNET_API_KEY,
+} = process.env
 
 type Provider =
   | ethers.providers.JsonRpcProvider
   | ethers.providers.InfuraProvider
   | ethers.providers.BaseProvider
+  | ethers.providers.AlchemyProvider
 
 export const getProvider = (network: string): Provider => {
-  if (network !== 'local') {
-    const netName = network === 'polygon' ? 'matic' : 'maticmum'
-    console.log(`provider: ${netName}`)
-    // const provider = ethers.providers.getDefaultProvider(netName, {
-    //   infura: {
-    //     projectId: process.env.INFURA_PROJECT_ID,
-    //     projectSecret: process.env.INFURA_PROJECT_SECRET,
-    //   },
-    //   alchemy: process.env.ALCHEMY_API_KEY
-    // })
-    // const provider = ethers.providers.getDefaultProvider(netName, {
-    //   alchemy: process.env.ALCHEMY_API_KEY,
-    // })
-    const provider = new AlchemyProvider(netName, process.env.ALCHEMY_API_KEY)
-    return provider
+  if (network === 'polygon') {
+    console.log(`[+] using mainnet provider`)
+    return ethers.getDefaultProvider('mumbai', {
+      infura: {
+        projectId: INFURA_PROJECT_ID,
+        projectSecret: INFURA_PROJECT_SECRET,
+      },
+      alchemy: ALCHEMY_MAINNET_API_KEY,
+    })
+  } else if (network === 'mumbai') {
+    console.log(`[+] using mumbai alchemy provider`)
+    return new AlchemyProvider('maticmum', ALCHEMY_TESTNET_API_KEY)
+  } else {
+    console.log(`[+] using local provider rpc provider`)
+    return new JsonRpcProvider('http://localhost:8545')
   }
-  return new ethers.providers.JsonRpcProvider('http://localhost:8545')
 }
 
-
-export const getPrivk = (network: string) => {
+export const getPrivk = (network: string): string => {
   if (network === 'polygon') {
-    console.log('using polygon wallet')
-    return POLYGON_PRIVK
+    console.log('[+] using polygon wallet')
+    return POLYGON_PRIVK || ''
   } else if (network === 'mumbai') {
-    console.log('using mumbai wallet')
-    return MUMBAI_PRIVK
+    console.log('[+] using mumbai wallet')
+    return MUMBAI_PRIVK || ''
   } else {
-    console.log('using local wallet')
-    return LOCAL_PRIVK
+    console.log('[+] using local wallet')
+    return LOCAL_PRIVK || ''
   }
 }

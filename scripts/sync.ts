@@ -1,8 +1,18 @@
 import fs from 'fs-extra'
 
-const syncAndWrite = (addressesPath: string, jsonPath: string): void => {
+const _backup = (network: string) => {
+  const now = Date.now()
+  const addressPath = `contracts/addresses/${network}.json`
+  const abiPath = `contracts/abi/`
+  fs.copySync(`${addressPath}`, `backups/${network}/${network}_${now}.json`)
+  fs.copySync(`${abiPath}`, `backups/abi/${now}`)
+}
+
+const syncAndWrite = (network: string): void => {
   try {
     const addresses: any = {}
+    const addressesPath = `../fweb3-contracts/deploy_addresses/${network}`
+    const jsonPath = `contracts/addresses/${network}.json`
     const addressFile = fs.readdirSync(addressesPath)
 
     for (const filename of addressFile) {
@@ -11,7 +21,7 @@ const syncAndWrite = (addressesPath: string, jsonPath: string): void => {
         (f) => `${f[1].toUpperCase()}`
       )
       const address = fs.readFileSync(`${addressesPath}/${filename}`, 'utf-8')
-      addresses[camelFilename] = address
+      addresses[camelFilename] = address.trim()
     }
     fs.writeFileSync(jsonPath, JSON.stringify(addresses))
     console.log('synced local')
@@ -22,10 +32,8 @@ const syncAndWrite = (addressesPath: string, jsonPath: string): void => {
   }
 }
 
-
 ;(() => {
   const network = process.argv[2]
-  const addressPath = `../fweb3-contracts/deploy_addresses/${network}`
-  const jsonPath = `contracts/addresses/${network}.json`
-  syncAndWrite(addressPath, jsonPath)
+  _backup(network)
+  syncAndWrite(network)
 })()
