@@ -19,7 +19,7 @@ type Provider =
 export const getProvider = (network: string): Provider => {
   if (network === 'polygon') {
     console.log(`[+] using mainnet provider`)
-    return ethers.getDefaultProvider('mumbai', {
+    return ethers.getDefaultProvider('matic', {
       infura: {
         projectId: INFURA_PROJECT_ID,
         projectSecret: INFURA_PROJECT_SECRET,
