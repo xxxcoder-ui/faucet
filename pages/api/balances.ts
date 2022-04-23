@@ -1,3 +1,4 @@
+import { formatError } from './../../lib/errors';
 import { getPrivk, getProvider } from './../../lib/interfaces'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { ethers } from 'ethers'
@@ -67,6 +68,6 @@ export default async function handler(
     })
   } catch (e: any) {
     console.error(e)
-    res.status(500).json(e)
+    res.status(500).json({ status: 'error', error: formatError(e), code: e.code })
   }
 }
