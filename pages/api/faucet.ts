@@ -5,7 +5,10 @@ import { ethers } from 'ethers'
 import { getContractAddress } from './../../contracts/addresses/index'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { formatError } from '../../lib/errors'
-const { FWEB3_GAS_LIMIT, MATIC_GAS_LIMIT } = process.env
+const {
+  FWEB3_GAS_LIMIT = 3000000,
+  MATIC_GAS_LIMIT = 3000000
+} = process.env
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
