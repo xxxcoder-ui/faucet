@@ -5,6 +5,8 @@ import { ethers } from 'ethers'
 import { getContractAddress } from './../../contracts/addresses/index'
 import type { NextApiRequest, NextApiResponse } from 'next'
 
+const GAS_LIMIT = 3000000
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -29,20 +31,8 @@ export default async function handler(
         wallet
       )
 
-      // const maticDrip = await maticFaucetContract.dripAmount()
-      // const maticDripDecimals = await maticFaucetContract.getDecimals
-      // const startBalance = await provider.getBalance(maticFaucetAddress)
-
-      // console.log({
-      //   matic_drip_amount: maticDrip.toString(),
-      //   matic_drip_decimals: maticDripDecimals.toString(),
-      //   matic_faucet_start_balance: startBalance.toString(),
-      //   matic_faucet_address: maticFaucetAddress,
-      //   sending_to: account,
-      // })
-
       const tx = await maticFaucetContract.dripMatic(account, {
-
+        gasLimit: GAS_LIMIT,
       })
       const receipt = await tx.wait()
       const endBalance = await provider.getBalance(maticFaucetAddress)
@@ -85,7 +75,7 @@ export default async function handler(
 
       console.log('[+] dripping fweb3...')
       const tx = await fweb3FaucetContract.dripFweb3(account, {
-        gasLimit: 3000000,
+        gasLimit: GAS_LIMIT,
       })
 
       const receipt = await tx.wait()
