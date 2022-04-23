@@ -41,9 +41,7 @@ export default async function handler(
         wallet
       )
 
-      const tx = await maticFaucetContract.dripMatic(account, {
-        gasLimit: MATIC_GAS_LIMIT,
-      })
+      const tx = await maticFaucetContract.dripMatic(account)
       const receipt = await tx.wait()
       const endBalance = await provider.getBalance(maticFaucetAddress)
 
@@ -84,9 +82,7 @@ export default async function handler(
       )
 
       console.log('[+] dripping fweb3...')
-      const tx = await fweb3FaucetContract.dripFweb3(account, {
-        gasLimit: FWEB3_GAS_LIMIT,
-      })
+      const tx = await fweb3FaucetContract.dripFweb3(account)
 
       const receipt = await tx.wait()
       console.log('[+] success!')
