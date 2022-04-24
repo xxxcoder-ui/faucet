@@ -81,12 +81,19 @@ export default async function handler(
       )
 
       console.log('[+] dripping fweb3...')
-      const feeData = await provider.getFeeData()
-      console.log(`[+] Fee data: ${feeData}`)
-      const tx = await fweb3FaucetContract.dripFweb3(account, {
-        gasPrice: feeData.gasPrice
-      })
+      // const gasRes = await fetch('https://gasstation-mainnet.matic.network/v2')
+      // const recommendedGas = await gasRes.json()
+      // const fastMaxPriority = recommendedGas.fast.fastMaxPriorityFee.toString()
+      // const standardFees = recommendedGas.standard
+      // const standardMaxFee = standardFees.maxFee.toString()
+      // const maxFeeFloor = Math.floor(standardMaxFee.toString())
+      // const fastMaxPriorityFloor = Math.floor(fastMaxPriority.toString())
+      // const fastFee = ethers.utils.parseUnits(fastMaxPriorityFloor.toString(), 'gwei')
+      // const standardFee = ethers.utils.parseUnits(maxFeeFloor.toString(), 'gwei')
+      // console.log({ fastFee: fastFee.toString(), standardFee: standardFee.toString() })
+      // const x = ethers.utils.parseEther(str.toString())
 
+      const tx = await fweb3FaucetContract.dripFweb3(account)
       const receipt = await tx.wait()
       console.log('[+] success!')
       console.log({

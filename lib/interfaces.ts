@@ -17,7 +17,7 @@ type Provider =
   | ethers.providers.AlchemyProvider
 
 export const getProvider = (network: string): Provider => {
-  if (network === 'polygon') {
+  if (network === 'polygon' || network === 'original') {
     console.log(`[+] using mainnet provider`)
     return new AlchemyProvider('matic', ALCHEMY_MAINNET_API_KEY)
   } else if (network === 'mumbai') {

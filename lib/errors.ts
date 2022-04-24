@@ -24,22 +24,22 @@ export const formatError = (err: any) => {
   const didNotSend = message.includes('send failed')
   const cannotEstimateGas = message.includes('may require manual gas limit')
 
-  console.log({
-    hasLimitOfFweb3,
-    exceedsGasLimit,
-    missingGas,
-    underPriced,
-    notEnoughGas,
-    gasTooLowForNextBlock,
-    alreadyUsed,
-    tooSoon,
-    missingFweb3,
-    alreadyHaveMatic,
-    faucetDisabled,
-    faucetDry,
-    didNotSend,
-    cannotEstimateGas,
-  })
+  // console.log({
+  //   hasLimitOfFweb3,
+  //   exceedsGasLimit,
+  //   missingGas,
+  //   underPriced,
+  //   notEnoughGas,
+  //   gasTooLowForNextBlock,
+  //   alreadyUsed,
+  //   tooSoon,
+  //   missingFweb3,
+  //   alreadyHaveMatic,
+  //   faucetDisabled,
+  //   faucetDry,
+  //   didNotSend,
+  //   cannotEstimateGas,
+  // })
   const callException =
     err?.code === 'CALL_EXCEPTION' && err?.method
       ? `error calling contract. check funds`

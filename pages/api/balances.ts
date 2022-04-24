@@ -57,13 +57,13 @@ export default async function handler(
 
     res.status(200).json({
       fweb3: {
-        balance: fweb3Balance.toString(),
-        matic_gas: fweb3MaticBalance.toString(),
-        drip: fweb3Drip.toString(),
+        token_balance: fweb3Balance.toString(),
+        matic_balance: fweb3MaticBalance.toString(),
+        drip_amount: fweb3Drip.toString(),
       },
       matic: {
-        balance: maticFaucetBalance.toString(),
-        drip: maticDrip.toString(),
+        matic_balance: maticFaucetBalance.toString(),
+        drip_amount: maticDrip.toString(),
       },
     })
   } catch (e: any) {
