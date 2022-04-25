@@ -5,12 +5,15 @@ import { ethers } from 'ethers'
 import { getContractAddress } from './../../contracts/addresses/index'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { formatError } from '../../lib/errors'
+import { checkOrigin } from '../../lib/cors'
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   try {
+    await checkOrigin(req)
+
     const { network, type, account } = req.query
     console.log(`[+] Initializing ${type} request on ${network}`)
     const privk = getPrivk(network.toString())
@@ -39,7 +42,7 @@ export default async function handler(
       const feeData = await provider.getFeeData()
       console.log(`[+] Fee data: ${feeData}`)
       const tx = await maticFaucetContract.dripMatic(account, {
-        gasPrice: feeData.gasPrice
+        gasPrice: feeData.gasPrice,
       })
       const receipt = await tx.wait()
       const endBalance = await provider.getBalance(maticFaucetAddress)

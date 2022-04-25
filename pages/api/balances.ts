@@ -1,15 +1,16 @@
+import { checkOrigin } from './../../lib/cors';
 import { formatError } from './../../lib/errors';
 import { getPrivk, getProvider } from './../../lib/interfaces'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { ethers } from 'ethers'
 import { loadAbi } from '../../contracts/abi'
 import { getContractAddress } from '../../contracts/addresses'
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   try {
+    await checkOrigin(req)
     const { network } = req.query
     const fweb3FaucetAddress = getContractAddress(
       network.toString(),
