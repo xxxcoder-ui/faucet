@@ -12,6 +12,7 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
+
     await checkOrigin(req)
 
     const { network, type, account } = req.query

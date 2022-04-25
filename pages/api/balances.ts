@@ -10,6 +10,9 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
+          const roleBytes = ethers.utils.toUtf8Bytes('ADMIN_ROLE')
+          const roleHash = ethers.utils.keccak256(roleBytes)
+          console.log({ roleHash })
     await checkOrigin(req)
     const { network } = req.query
     const fweb3FaucetAddress = getContractAddress(
