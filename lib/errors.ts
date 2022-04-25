@@ -24,28 +24,8 @@ export const formatError = (err: any) => {
   const didNotSend = message.includes('send failed')
   const cannotEstimateGas = message.includes('may require manual gas limit')
 
-  // console.log({
-  //   hasLimitOfFweb3,
-  //   exceedsGasLimit,
-  //   missingGas,
-  //   underPriced,
-  //   notEnoughGas,
-  //   gasTooLowForNextBlock,
-  //   alreadyUsed,
-  //   tooSoon,
-  //   missingFweb3,
-  //   alreadyHaveMatic,
-  //   faucetDisabled,
-  //   faucetDry,
-  //   didNotSend,
-  //   cannotEstimateGas,
-  // })
-  const callException =
-    err?.code === 'CALL_EXCEPTION' && err?.method
-      ? `error calling contract. check funds`
-      : null
   let error =
-    callException ?? 'An unknown error occured. Please reach out to #support'
+    'Current gas bid is over the faucet budget. Please try again later.'
 
   if (hasLimitOfFweb3 && !exceedsGasLimit && !cannotEstimateGas) {
     error = 'you already enough token to play'
@@ -97,6 +77,7 @@ export const formatError = (err: any) => {
   if (underPriced) {
     error = 'gas is under priced / unpredictable. wait a few min and try again'
   }
+
   if (missingGas) {
     error = 'Faucet contract needs gas money'
   }
