@@ -25,7 +25,7 @@ function initMiddleware(middleware) {
 
 export const cors = initMiddleware(
   Cors({
-    origin: ['localhost:3000', /vercel\.app$/, /alchemy\.com$/],
+    origin: ['localhost:3000', /.vercel\.app/, /alchemy\.com/],
     methods: ['GET', 'POST', 'OPTIONS'],
     allowedHeaders: [
       'Content-Type',
