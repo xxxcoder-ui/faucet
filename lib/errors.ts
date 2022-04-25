@@ -40,12 +40,8 @@ export const formatError = (err: any) => {
   //   didNotSend,
   //   cannotEstimateGas,
   // })
-  const callException =
-    err?.code === 'CALL_EXCEPTION' && err?.method
-      ? `error calling contract. check funds`
-      : null
-  let error =
-    callException ?? 'An unknown error occured. Please reach out to #support'
+
+  let error = 'Current gas bid is over the faucet budget. Please try again later.'
 
   if (hasLimitOfFweb3 && !exceedsGasLimit && !cannotEstimateGas) {
     error = 'you already enough token to play'

@@ -1,7 +1,8 @@
+import { attemptTransaction } from './../../lib/transact'
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { loadAbi } from './../../contracts/abi/index'
 import { getPrivk, getProvider } from '../../lib/interfaces'
-import { ethers } from 'ethers'
+import { BigNumber, ethers } from 'ethers'
 import { getContractAddress } from './../../contracts/addresses/index'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { formatError } from '../../lib/errors'
@@ -12,7 +13,6 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-
     await checkOrigin(req)
 
     const { network, type, account } = req.query
@@ -39,19 +39,22 @@ export default async function handler(
         wallet
       )
 
-      console.log('[+] dripping matic...')
-      const feeData = await provider.getFeeData()
-      console.log(`[+] Fee data: ${feeData}`)
-      const tx = await maticFaucetContract.dripMatic(account, {
-        gasPrice: feeData.gasPrice,
-      })
-      const receipt = await tx.wait()
+      const receipt = await attemptTransaction(
+        provider,
+        maticFaucetContract.dripMatic,
+        account.toString()
+      )
+
+      if (!receipt) {
+        throw new Error('Gas prices are too high. Please try again later')
+      }
+
       const endBalance = await provider.getBalance(maticFaucetAddress)
 
       console.log({
         sent_matic_to: account,
         matic_faucet_end_balance: endBalance.toString(),
-        tx_receipt: tx,
+        tx_receipt: receipt,
       })
 
       res.status(200).json(receipt)
@@ -80,26 +83,20 @@ export default async function handler(
         wallet
       )
 
+      const receipt = await attemptTransaction(
+        provider,
+        fweb3FaucetContract.dripFweb3,
+        account.toString()
+      )
+
+      if (!receipt) {
+        throw new Error('Gas prices are too high. Please try again later')
+      }
+
       const fweb3FaucetBalance = await fweb3TokenContract.balanceOf(
         fweb3FaucetContract.address
       )
 
-      console.log('[+] dripping fweb3...')
-      // const gasRes = await fetch('https://gasstation-mainnet.matic.network/v2')
-      // const recommendedGas = await gasRes.json()
-      // const fastMaxPriority = recommendedGas.fast.fastMaxPriorityFee.toString()
-      // const standardFees = recommendedGas.standard
-      // const standardMaxFee = standardFees.maxFee.toString()
-      // const maxFeeFloor = Math.floor(standardMaxFee.toString())
-      // const fastMaxPriorityFloor = Math.floor(fastMaxPriority.toString())
-      // const fastFee = ethers.utils.parseUnits(fastMaxPriorityFloor.toString(), 'gwei')
-      // const standardFee = ethers.utils.parseUnits(maxFeeFloor.toString(), 'gwei')
-      // console.log({ fastFee: fastFee.toString(), standardFee: standardFee.toString() })
-      // const x = ethers.utils.parseEther(str.toString())
-
-      const tx = await fweb3FaucetContract.dripFweb3(account)
-      const receipt = await tx.wait()
-      console.log('[+] success!')
       console.log({
         sent_fweb3_to: account,
         fweb3_faucet_balance: fweb3FaucetBalance.toString(),
@@ -108,7 +105,7 @@ export default async function handler(
       res.status(200).json(receipt)
     }
   } catch (err: any) {
-    console.error(JSON.stringify(err, null, 2))
+    console.error(err)
     res.status(500).json({
       error: formatError(err),
       status: 'error',
