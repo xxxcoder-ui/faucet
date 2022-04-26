@@ -4,9 +4,9 @@ import Cors from 'cors'
 export const checkOrigin = async (req: NextApiRequest) => {
   const { headers } = req
   const localRegex = new RegExp(/localhost:3000/)
-  const isVercel = new RegExp(/.*\.vercel.*/)
+  const vercelRegex = new RegExp(/.*\.vercel.*/)
   const isLocalhost = localRegex?.test(headers?.host || '')
-  console.error({ isLocalhost, isVercel })
+  const isVercel = vercelRegex?.test(headers?.host || '')
   if (!isVercel || !isLocalhost) {
     throw new Error('unauthorized')
   }
