@@ -1,18 +1,19 @@
-import { BigNumber, ethers } from 'ethers'
+import { ethers } from 'ethers'
 import type { Provider } from './interfaces'
 
-let attempts = 0
+const { GAS_LIMIT = 60000000000 } = process.env
+
 export const attemptTransaction = async (
   provider: Provider,
   contractFunction: any,
   address: string
 ) => {
- const FAUCET_LIMIT = 60000000000 // more than 60gwi is ridiculous
- const prices = await _createPrices(provider)
- for (let price of prices) {
-   try {
-     console.log(`[+] Trying gas price [${price?.toString()}]`)
-      const gasIsMoreThanOurLimit = price?.gt(FAUCET_LIMIT)
+  const prices = await _createPrices(provider)
+  for (let price of prices) {
+    try {
+      console.log(`[+] Gas limit set to: [${GAS_LIMIT?.toString()}]`)
+      console.log(`[+] Trying gas price [${price?.toString()}]`)
+      const gasIsMoreThanOurLimit = price?.gt(GAS_LIMIT)
       if (!price || price.isZero()) {
         throw new Error('Gas is unpredictable. Try again later.')
       }
