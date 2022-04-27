@@ -1,5 +1,5 @@
-import { checkOrigin } from './../../lib/cors';
-import { formatError } from './../../lib/errors';
+import { checkOrigin } from './../../lib/cors'
+import { formatError } from './../../lib/errors'
 import { getPrivk, getProvider } from './../../lib/interfaces'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { ethers } from 'ethers'
@@ -10,9 +10,6 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-          const roleBytes = ethers.utils.toUtf8Bytes('ADMIN_ROLE')
-          const roleHash = ethers.utils.keccak256(roleBytes)
-          console.log({ roleHash })
     await checkOrigin(req)
     const { network } = req.query
     const fweb3FaucetAddress = getContractAddress(
@@ -61,17 +58,19 @@ export default async function handler(
 
     res.status(200).json({
       fweb3: {
-        token_balance: fweb3Balance.toString(),
-        matic_balance: fweb3MaticBalance.toString(),
-        drip_amount: fweb3Drip.toString(),
+        token_balance: ethers.utils.formatEther(fweb3Balance.toString()),
+        matic_balance: ethers.utils.formatEther(fweb3MaticBalance.toString()),
+        drip_amount: ethers.utils.formatEther(fweb3Drip.toString()),
       },
       matic: {
-        matic_balance: maticFaucetBalance.toString(),
-        drip_amount: maticDrip.toString(),
+        matic_balance: ethers.utils.formatEther(maticFaucetBalance.toString()),
+        drip_amount: ethers.utils.formatEther(maticDrip.toString()),
       },
     })
   } catch (e: any) {
     console.error(e)
-    res.status(500).json({ status: 'error', error: formatError(e), code: e.code })
+    res
+      .status(500)
+      .json({ status: 'error', error: formatError(e), code: e.code })
   }
 }
