@@ -90,7 +90,7 @@ export default async function handler(
       )
 
       if (!receipt) {
-        throw new Error('Gas prices are too high. Please try again later')
+        throw new Error('cant process your request right now. please try again later')
       }
 
       const fweb3FaucetBalance = await fweb3TokenContract.balanceOf(

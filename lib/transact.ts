@@ -1,6 +1,7 @@
-import { BigNumber, ethers } from 'ethers'
+import { ethers } from 'ethers'
 import { getGasPrices } from './gas'
 import type { Provider } from './interfaces'
+import { formatError } from './errors'
 
 const { GAS_LIMIT = 200000000000 } = process.env
 
@@ -15,35 +16,42 @@ export const attemptTransaction = async (
   const prices = await getGasPrices(provider)
   const gasLimitGwei = ethers.utils.parseUnits(GAS_LIMIT?.toString(), 'gwei')
   console.log(`[+] Gas limit set to: [${gasLimitGwei}]`)
-  for (let price of prices) {
+  for (let i = 0; i < prices.length; i++) {
     try {
-      console.log(`[+] Trying gas price [${price}]`)
+      if (prices[i] === prices.length) {
+        throw new Error(
+          `Cannot process tx. Have tried ${prices.length} times without success.`
+        )
+      }
 
-      if (_isNotValidPrice(price)) {
+      console.log(`[+] Trying gas price [${prices[i]}]`)
+
+      if (_isNotValidPrice(prices[i])) {
         throw new Error('Gas is unpredictable. Try again later.')
       }
 
       const tx = await contractFunction(address, {
-        gasPrice: price, // setting a gasLimit has problems
+        gasPrice: prices[i], // setting a gasLimit has problems
       })
 
       return tx.wait()
     } catch (err: any) {
-      console.error(err?.reason)
-      const gasReason = _isGasError(err)
+      const formattedError = formatError(err)
+      const gasReason = _isGasError(formattedError)
       if (gasReason) {
         continue
       } else {
-        throw new Error('Gas is unpredictable. Try again later.')
+        throw new Error(formattedError)
       }
     }
   }
 }
 
-const _isGasError = (err: any): boolean => {
-  const cannotEstimate = err.message.includes('cannot estimate gas')
-  const tooLittleGas = err.message.includes(
+const _isGasError = (err: string): boolean => {
+  const cannotEstimate = err.includes('cant estimate gas')
+  const notEnoughGas = err.includes('not enough gas')
+  const gasTooLowForNextBlock = err.includes(
     'max fee per gas less than block base'
   )
-  return cannotEstimate || tooLittleGas
+  return cannotEstimate || notEnoughGas || gasTooLowForNextBlock
 }

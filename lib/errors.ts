@@ -23,9 +23,14 @@ export const formatError = (err: any) => {
   const faucetDry = message.includes('dry')
   const didNotSend = message.includes('send failed')
   const cannotEstimateGas = message.includes('may require manual gas limit')
+  const maxFeeForGasError = message.includes(
+    'max fee per gas less than block base'
+  )
+  let error = err?.reason
 
-  let error =
-    'Current gas bid is over the faucet budget. Please try again later.'
+  if (maxFeeForGasError) {
+    error = 'max fee per gas less than block base'
+  }
 
   if (hasLimitOfFweb3 && !exceedsGasLimit && !cannotEstimateGas) {
     error = 'you already enough token to play'
