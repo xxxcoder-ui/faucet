@@ -1,65 +1,57 @@
 import { ethers } from 'ethers'
+import { getGasPrices } from './gas'
 import type { Provider } from './interfaces'
+import { formatError } from './errors'
 
-const { GAS_LIMIT = 60000000000 } = process.env
+const { GAS_LIMIT = 200000000000 } = process.env
+
+const _isNotValidPrice = (price: number) =>
+  !price || price === 0 || price > parseInt(GAS_LIMIT.toString())
 
 export const attemptTransaction = async (
   provider: Provider,
   contractFunction: any,
   address: string
 ) => {
-  const prices = await _createPrices(provider)
-  for (let price of prices) {
+  const prices = await getGasPrices(provider)
+  const gasLimitGwei = ethers.utils.parseUnits(GAS_LIMIT?.toString(), 'gwei')
+  console.log(`[+] Gas limit set to: [${gasLimitGwei}]`)
+  for (let i = 0; i < prices.length; i++) {
     try {
-      console.log(`[+] Gas limit set to: [${GAS_LIMIT?.toString()}]`)
-      console.log(`[+] Trying gas price [${price?.toString()}]`)
-      const gasIsMoreThanOurLimit = price?.gt(GAS_LIMIT)
-      if (!price || price.isZero()) {
+      if (prices[i] === prices.length) {
+        throw new Error(
+          `Cannot process tx. Have tried ${prices.length} times without success.`
+        )
+      }
+
+      console.log(`[+] Trying gas price [${prices[i]}]`)
+
+      if (_isNotValidPrice(prices[i])) {
         throw new Error('Gas is unpredictable. Try again later.')
       }
-      if (gasIsMoreThanOurLimit) {
-        throw new Error('Gas costs exceed the faucets allowed maximum')
-      }
+
       const tx = await contractFunction(address, {
-        gasPrice: price, // setting a gasLimit has problems
+        gasPrice: prices[i], // setting a gasLimit has problems
       })
+
       return tx.wait()
     } catch (err: any) {
-      const gasReason = _gasErrors(err)
+      const formattedError = formatError(err)
+      const gasReason = _isGasError(formattedError)
       if (gasReason) {
         continue
       } else {
-        console.error(err?.message)
-        throw new Error('Gas is unpredictable. Try again later.')
+        throw new Error(formattedError)
       }
     }
   }
 }
 
-const _createPrices = async (provider: Provider) => {
-  try {
-    const gasRes = await fetch('https://gasstation-mainnet.matic.network/v2')
-    const { safeLow } = await gasRes.json()
-    const { maxPriorityFee: safeFee } = safeLow
-    const safeFeeCeil = Math.ceil(safeFee).toString()
-    const safeFeeWei = ethers.utils.parseUnits(safeFeeCeil.toString(), 'gwei')
-    const priceArr = ['3', '6', '9'].map((adder) =>
-      safeFeeWei.add(parseInt(adder.padEnd(9, '0')))
-    )
-    return priceArr
-  } catch (err: any) {
-    console.error(err?.message)
-    const { gasPrice } = await provider.getFeeData()
-    return ['3', '6', '9', '12'].map((adder) =>
-      gasPrice?.add(parseInt(adder.padEnd(9, '0')))
-    )
-  }
-}
-
-const _gasErrors = (err: any): boolean => {
-  const cannotEstimate = err.message.includes('cannot estimate gas')
-  const tooLittleGas = err.message.includes(
+const _isGasError = (err: string): boolean => {
+  const cannotEstimate = err.includes('cant estimate gas')
+  const notEnoughGas = err.includes('not enough gas')
+  const gasTooLowForNextBlock = err.includes(
     'max fee per gas less than block base'
   )
-  return cannotEstimate || tooLittleGas
+  return cannotEstimate || notEnoughGas || gasTooLowForNextBlock
 }

@@ -90,7 +90,7 @@ export default async function handler(
       )
 
       if (!receipt) {
-        throw new Error('Gas prices are too high. Please try again later')
+        throw new Error('cant process your request right now. please try again later')
       }
 
       const fweb3FaucetBalance = await fweb3TokenContract.balanceOf(
@@ -100,16 +100,17 @@ export default async function handler(
       console.log({
         sent_fweb3_to: account,
         fweb3_faucet_balance: fweb3FaucetBalance.toString(),
-        tx: receipt.transactionHash,
+        tx: receipt,
       })
       res.status(200).json(receipt)
     }
   } catch (err: any) {
-    console.error(err)
+    console.error(err?.message)
     res.status(500).json({
       error: formatError(err),
       status: 'error',
       code: err?.code || 'NO_CODE',
+      raw: err
     })
   }
 }
