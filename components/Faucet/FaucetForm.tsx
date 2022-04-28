@@ -73,11 +73,32 @@ export const FaucetForm = () => {
     try {
       setError('')
       setLoading(true)
-      const uri = `/api/faucet?network=${apiRoute}&type=${faucetType}&account=${account}`
-      const faucetResponse: Response = await fetch(uri)
+      const requestOptions: RequestInit = {
+        method: 'post',
+        mode: 'cors',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_FAUCET_API_TOKEN}`,
+        },
+        body: JSON.stringify({
+          network: apiRoute,
+          type: faucetType,
+          account,
+        }),
+      }
+
+      const faucetResponse = await fetch(
+        `${process.env.NEXT_PUBLIC_FAUCET_API_URL}/api/faucet`,
+        requestOptions
+      )
+      if (!faucetResponse.ok) {
+        setError('Faucet request failed')
+        setLoading(false)
+        return
+      }
       const data = await faucetResponse.json()
       const { error, transactionHash } = data
-      console.log({ txResponseData: data })
+
       if (error) {
         setError(error)
       } else if (!transactionHash) {
@@ -112,7 +133,7 @@ export const FaucetForm = () => {
             }}
           >
             <ReCAPTCHA
-              sitekey='6Ld13o4fAAAAAMByXu-GE5J34kq_hoUDZRd9tMFy'
+              sitekey={process.env.NEXT_PUBLIC_CAPATCHA_SITE_KEY || ''}
               onChange={handleCapatcha}
             />
           </Container>
