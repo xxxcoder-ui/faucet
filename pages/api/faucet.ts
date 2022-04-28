@@ -54,7 +54,7 @@ export default async function handler(
       console.log({
         sent_matic_to: account,
         matic_faucet_end_balance: endBalance.toString(),
-        tx_receipt: receipt,
+        tx_receipt: receipt.transactionHash,
       })
 
       res.status(200).json(receipt)
@@ -105,11 +105,12 @@ export default async function handler(
       res.status(200).json(receipt)
     }
   } catch (err: any) {
-    console.error(err)
+    console.error(err?.message)
     res.status(500).json({
       error: formatError(err),
       status: 'error',
       code: err?.code || 'NO_CODE',
+      raw: err
     })
   }
 }
