@@ -22,16 +22,19 @@ mumbai faucet contracts:
 
 ## Development
 
-1. Clone the [contracts repo](https://github.com/fweb3/contracts)
-2. Follow the readme to setup local contracts to use with this app
-3. Make sure you copy over your deployed addresses into `./constants.js`
-4. Run the faucet with `yarn dev`
+- copy the `env.example` to `.env`
+- Clone the [contracts repo](https://github.com/fweb3/contracts)
+  - Follow the readme to setup local contracts to use with this app
+  - You can run `npm run sync:local` to sync your local deployed contracts with this app if the root folder is `../<here in your path>`
+- clone the [api repo](https://github.com/fweb3/api)
+  - follow this instructions to setup dev for the api
+- Run the faucet with `npm run dev`
 
 
 TODO:
-- add local dev for FE
-- add captcha
+- docker / docker compose
+- set fallback api
 - add user data to account when faucet is used to cut down on api requests
 - add tests
-- match game styles
-- admin panel
+- match game styles / better styling
+- admin panel? dune?

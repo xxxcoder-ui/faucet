@@ -7,14 +7,13 @@
   "author": "archae0pteryx (https://github.com/archae0pteryx)",
   "license": "MIT",
   "engines": {
-    "node": "16.x"
+    "node": "14.x"
   },
   "bugs": {
     "url": "https://github.com/fweb3/faucet/issues",
     "email": "dont@email.me"
   },
   "scripts": {
-    "localdev": "NEXT_APP_LOCALNET=true next dev",
     "dev": "next dev",
     "build": "next build",
     "start": "NODE_OPTIONS='--http-server-default-timeout=0' next start",

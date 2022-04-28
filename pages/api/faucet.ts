@@ -1,6 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import { attemptTransaction } from './../../lib/transact'
-import { checkOrigin } from '../../lib/cors'
 import { ethers } from 'ethers'
 import { formatError } from '../../lib/errors'
 import { getContractAddress } from './../../contracts/addresses/index'
@@ -13,8 +12,6 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    await checkOrigin(req)
-
     const { network, type, account } = req.query
     console.log(`[+] Initializing ${type} request on ${network}`)
     const privk = getPrivk(network.toString())
