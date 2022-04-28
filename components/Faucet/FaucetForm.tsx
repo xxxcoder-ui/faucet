@@ -77,7 +77,6 @@ export const FaucetForm = () => {
       const faucetResponse: Response = await fetch(uri)
       const data = await faucetResponse.json()
       const { error, transactionHash } = data
-      console.log({ txResponseData: data })
       if (error) {
         setError(error)
       } else if (!transactionHash) {

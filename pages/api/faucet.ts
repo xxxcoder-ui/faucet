@@ -54,7 +54,7 @@ export default async function handler(
       console.log({
         sent_matic_to: account,
         matic_faucet_end_balance: endBalance.toString(),
-        tx_receipt: receipt.transactionHash,
+        tx_receipt: receipt,
       })
 
       res.status(200).json(receipt)
@@ -100,7 +100,7 @@ export default async function handler(
       console.log({
         sent_fweb3_to: account,
         fweb3_faucet_balance: fweb3FaucetBalance.toString(),
-        tx: receipt.transactionHash,
+        tx: receipt,
       })
       res.status(200).json(receipt)
     }
