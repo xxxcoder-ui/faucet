@@ -10,10 +10,10 @@ export const SplashScreen = () => {
       minHeight='80vh'
       color='aliceblue'
     >
-      <Typography variant='h1'>Fweb3 Faucet</Typography>
+      <Typography variant='h1'>Fweb3 Faucet (Disabled)</Typography>
       <Typography variant='h4' sx={{
         color: 'red'
-      }}>Please Connect Wallet</Typography>
+      }}>Faucet is disabled for abuse. Please check back again in a few days.</Typography>
     </Box>
   )
 }

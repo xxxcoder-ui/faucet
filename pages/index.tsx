@@ -7,9 +7,10 @@ import type { NextPage } from 'next'
 
 const Home: NextPage = () => {
   const { isConnected } = useAuth()
-  return (
-    <Container>{isConnected ? <FaucetForm /> : <SplashScreen />}</Container>
-  )
+  // return (
+  //   <Container>{isConnected ? <FaucetForm /> : <SplashScreen />}</Container>
+  // )
+  return <SplashScreen />
 }
 
 export default Home
