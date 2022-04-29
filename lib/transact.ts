@@ -41,7 +41,7 @@ export const attemptTransaction = async (
       if (gasReason) {
         continue
       } else {
-        throw new Error(formattedError)
+        throw new Error(err) // formats again in the next catch
       }
     }
   }
