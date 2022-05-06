@@ -12,6 +12,3 @@ export const ALLOWED_NETWORKS_MAP: IMap = {
   '0x539': NETWORKS.LOCAL,
 }
 
-export const MORALIS_SERVER_URL =
-  'https://zvb1yx1rcsso.usemoralis.com:2053/server'
-export const MORALIS_APP_ID = 'WBl6lPViVLi8Epz1vZG6vhVWsBem5YCCMk9zgouo'

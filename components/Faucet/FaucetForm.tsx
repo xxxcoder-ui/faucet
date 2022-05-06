@@ -11,7 +11,6 @@ import { Container, useTheme } from '@mui/material'
 import { green, red } from '@mui/material/colors'
 import { LargeText } from '../shared/LargeText'
 import ReCAPTCHA from 'react-google-recaptcha'
-import { MoralisContextValue, useMoralis } from 'react-moralis'
 import { INetworkState, useNetwork } from '../../hooks'
 
 export const createScannerUrl = (
@@ -28,7 +27,6 @@ export const createScannerUrl = (
 }
 
 export const FaucetForm = () => {
-  const { chainId, account }: MoralisContextValue = useMoralis()
   const [startCapatcha, setStartCapatcha] = useState<boolean>(false)
   const { apiRoute }: INetworkState = useNetwork()
   const [transaction, setTransaction] = useState<string>('')
@@ -69,6 +67,8 @@ export const FaucetForm = () => {
     setFaucetType(type)
   }
 
+  const account = ''
+  const chainId = ''
   const handleFaucetSubmit = async (): Promise<void> => {
     try {
       setError('')

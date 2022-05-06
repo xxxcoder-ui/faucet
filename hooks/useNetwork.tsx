@@ -1,6 +1,5 @@
 import { ALLOWED_NETWORKS_MAP } from '../constants'
 import { createContext, useContext, useEffect, useState } from 'react'
-import { MoralisContextValue, useMoralis } from 'react-moralis'
 import WrappedInChains from 'wrapped-in-chains'
 
 export interface INetworkState {
@@ -24,8 +23,7 @@ const NetworkProvider = ({ children }: IDefaultProps) => {
   const [networkName, setNetworkName] = useState<string>('Not Connected')
   const [apiRoute, setApiRoute] = useState<Nullable<string>>(null)
   const [isLocalnet, setIsLocalnet] = useState<boolean>(false)
-  const { chainId }: MoralisContextValue = useMoralis()
-
+  const chainId = ''
   useEffect(() => {
     if (chainId) {
       if (chainId === '0x539') {
