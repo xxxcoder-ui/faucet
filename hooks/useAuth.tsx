@@ -65,11 +65,13 @@ const AuthProvider = ({ children }: IDefaultProps) => {
       window.ethereum.on('accountsChanged', handleAccountsChanged)
       window.ethereum.on('disconnect', handleDisconnect)
 
-      return () =>
+      return () => {
+        window?.ethereum.removeListener('disconnect', handleDisconnect)
         window?.ethereum.removeListener(
           'accountsChanged',
           handleAccountsChanged
         )
+      }
     }
   }, [])
 

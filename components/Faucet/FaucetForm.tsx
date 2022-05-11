@@ -26,13 +26,6 @@ export const createScannerUrl = (
   return ''
 }
 
-const _fetchToken = () => {
-  if (!process.env.API_TOKEN) {
-    return 'foobar'
-  }
-  return process.env.API_TOKEN
-}
-
 export const FaucetForm = () => {
   const [startCapatcha, setStartCapatcha] = useState<boolean>(false)
   const [transaction, setTransaction] = useState<string>('')
@@ -90,8 +83,9 @@ export const FaucetForm = () => {
           'Content-Type': 'application/json',
         },
       })
-      const { status, message, transaction_hash } = await faucetResponse.json()
-
+      const jsonResopnse = await faucetResponse.json()
+      const { transaction_hash, status, message } = jsonResopnse
+      console.log({ jsonResopnse })
       if (status !== 'success') {
         setError(message)
       } else if (!transaction_hash) {

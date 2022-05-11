@@ -72,7 +72,7 @@ export const NetworkInformation = () => {
 
   return (
     <Box>
-      {networkAllowed
+      {isConnected && networkAllowed
         ? renderConnectedAllowedNetwork()
         : renderConnectedWrongNetwork()}
     </Box>

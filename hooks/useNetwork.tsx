@@ -23,7 +23,7 @@ const NetworkContext = createContext(defaultNetworkState)
 
 const NETNAMES = {
   maticmum: 'Mumbai',
-  matic: 'Polygon'
+  matic: 'Polygon',
 }
 
 const NetworkProvider = ({ children }: IDefaultProps) => {
@@ -31,7 +31,7 @@ const NetworkProvider = ({ children }: IDefaultProps) => {
   const [networkAllowed, setNetworkAllowed] = useState<boolean>(true)
   const [isLocalnet, setIsLocalnet] = useState<boolean>(false)
   const [chainId, setChainId] = useState(null)
-  const { provider, isConnected } = useAuth()
+  const { provider } = useAuth()
 
   useEffect(() => {
     if (window?.ethereum) {
@@ -42,30 +42,23 @@ const NetworkProvider = ({ children }: IDefaultProps) => {
   }, [])
 
   useEffect(() => {
-    if (!isConnected) {
-      setIsLocalnet(false)
-      setNetworkName('')
-      setChainId(null)
-      setNetworkAllowed(false)
-    }
-  }, [isConnected])
-
-  useEffect(() => {
     ;(async () => {
       try {
         if (provider) {
           const { chainId, name } = await provider.getNetwork()
-          console.log({ chainId, name })
           const regularName = NETNAMES[name] ?? name
           setNetworkName(regularName)
           setChainId(chainId)
+
           if (name === 'maticmum' || name === 'matic' || chainId === 1337) {
             setNetworkAllowed(true)
-            setChainId(chainId)
+          } else {
+            setNetworkAllowed(false)
           }
           if (chainId === 1337) {
             setIsLocalnet(true)
           }
+
         }
       } catch (err) {
         console.error(err)
