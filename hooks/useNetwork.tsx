@@ -1,8 +1,6 @@
 declare var window: any
 
-import { ALLOWED_NETWORKS } from '../constants'
 import { createContext, useContext, useEffect, useState } from 'react'
-import WrappedInChains from 'wrapped-in-chains'
 import { useAuth } from './useAuth'
 
 export interface INetworkState {

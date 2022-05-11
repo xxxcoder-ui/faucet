@@ -83,6 +83,7 @@ export const FaucetForm = () => {
           'Content-Type': 'application/json',
         },
       })
+      console.log({ faucetResponse })
       const jsonResopnse = await faucetResponse.json()
       const { transaction_hash, status, message } = jsonResopnse
       console.log({ jsonResopnse })
