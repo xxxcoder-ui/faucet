@@ -1,53 +1,84 @@
-import { ALLOWED_NETWORKS_MAP } from '../constants'
+declare var window: any
+
+import { ALLOWED_NETWORKS } from '../constants'
 import { createContext, useContext, useEffect, useState } from 'react'
 import WrappedInChains from 'wrapped-in-chains'
+import { useAuth } from './useAuth'
 
 export interface INetworkState {
   networkAllowed: boolean
   networkName: string
   isLocalnet: boolean
-  apiRoute: Nullable<string>
+  chainId: number
 }
 
 const defaultNetworkState: INetworkState = {
   networkAllowed: false,
   networkName: 'Not Connected',
   isLocalnet: false,
-  apiRoute: null
+  chainId: null,
 }
 
 const NetworkContext = createContext(defaultNetworkState)
 
+const NETNAMES = {
+  maticmum: 'Mumbai',
+  matic: 'Polygon'
+}
+
 const NetworkProvider = ({ children }: IDefaultProps) => {
-  const [networkAllowed, setNetworkAllowed] = useState<boolean>(true)
   const [networkName, setNetworkName] = useState<string>('Not Connected')
-  const [apiRoute, setApiRoute] = useState<Nullable<string>>(null)
+  const [networkAllowed, setNetworkAllowed] = useState<boolean>(true)
   const [isLocalnet, setIsLocalnet] = useState<boolean>(false)
-  const chainId = ''
+  const [chainId, setChainId] = useState(null)
+  const { provider, isConnected } = useAuth()
+
   useEffect(() => {
-    if (chainId) {
-      if (chainId === '0x539') {
-        setNetworkAllowed(true)
-        setIsLocalnet(true)
-        setNetworkName('localhost')
-        setApiRoute('local')
-      } else {
-        const { name: networkName } = WrappedInChains.getById(chainId)
-        const allowed: boolean = Object.keys(ALLOWED_NETWORKS_MAP).includes(chainId)
-        setNetworkName(networkName)
-        setNetworkAllowed(allowed)
-        setIsLocalnet(false)
-        allowed && setApiRoute(ALLOWED_NETWORKS_MAP[chainId])
-      }
+    if (window?.ethereum) {
+      window?.ethereum.on('networkChanged', setChainId)
+      return () =>
+        window?.ethereum.removeListener('accountsChanged', setChainId)
     }
-  }, [chainId]) // eslint-disable-line
+  }, [])
+
+  useEffect(() => {
+    if (!isConnected) {
+      setIsLocalnet(false)
+      setNetworkName('')
+      setChainId(null)
+      setNetworkAllowed(false)
+    }
+  }, [isConnected])
+
+  useEffect(() => {
+    ;(async () => {
+      try {
+        if (provider) {
+          const { chainId, name } = await provider.getNetwork()
+          console.log({ chainId, name })
+          const regularName = NETNAMES[name] ?? name
+          setNetworkName(regularName)
+          setChainId(chainId)
+          if (name === 'maticmum' || name === 'matic' || chainId === 1337) {
+            setNetworkAllowed(true)
+            setChainId(chainId)
+          }
+          if (chainId === 1337) {
+            setIsLocalnet(true)
+          }
+        }
+      } catch (err) {
+        console.error(err)
+      }
+    })()
+  }, [chainId, provider])
   return (
     <NetworkContext.Provider
       value={{
         networkAllowed,
         networkName,
         isLocalnet,
-        apiRoute
+        chainId,
       }}
     >
       {children}

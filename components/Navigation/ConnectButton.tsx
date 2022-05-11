@@ -8,6 +8,7 @@ export const ConnectButton = () => {
   const [error, setError] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
   const { isConnected }: IAuthState = useAuth()
+  const { authenticate, deauthenticate } = useAuth()
   const theme = useTheme()
 
   const styles = {
@@ -20,13 +21,15 @@ export const ConnectButton = () => {
     try {
       setError('')
       setLoading(true)
+      await authenticate()
       setLoading(false)
     } catch (e: any) {
       setError(e?.message)
       setLoading(false)
     }
   }
-  const handleDisconnect = async () => {
+  const handleDisconnect = () => {
+    deauthenticate()
   }
   return (
     <>

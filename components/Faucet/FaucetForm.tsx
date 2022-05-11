@@ -3,7 +3,7 @@ import { useState } from 'react'
 import Box from '@mui/material/Box'
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
-import { ALLOWED_NETWORKS_MAP, NETWORKS } from '../../constants'
+import { ALLOWED_NETWORKS, NETWORKS } from '../../constants'
 import { Fweb3Button } from './Fweb3'
 import { MaticButton } from './Matic'
 import Link from 'next/link'
@@ -11,13 +11,13 @@ import { Container, useTheme } from '@mui/material'
 import { green, red } from '@mui/material/colors'
 import { LargeText } from '../shared/LargeText'
 import ReCAPTCHA from 'react-google-recaptcha'
-import { INetworkState, useNetwork } from '../../hooks'
+import { INetworkState, useAuth, useNetwork } from '../../hooks'
 
 export const createScannerUrl = (
-  chainId: string,
+  chainId: number,
   transaction: string
 ): string => {
-  const currentNetwork = ALLOWED_NETWORKS_MAP[chainId]
+  const currentNetwork = ALLOWED_NETWORKS[chainId]
   if (currentNetwork === NETWORKS.MUMBAI) {
     return `https://mumbai.polygonscan.com/tx/${transaction}`
   } else if (currentNetwork === NETWORKS.POLYGON) {
@@ -26,14 +26,22 @@ export const createScannerUrl = (
   return ''
 }
 
+const _fetchToken = () => {
+  if (!process.env.API_TOKEN) {
+    return 'foobar'
+  }
+  return process.env.API_TOKEN
+}
+
 export const FaucetForm = () => {
   const [startCapatcha, setStartCapatcha] = useState<boolean>(false)
-  const { apiRoute }: INetworkState = useNetwork()
   const [transaction, setTransaction] = useState<string>('')
   const [faucetType, setFaucetType] = useState<string>('')
   const [scannerUrl, setScannerUrl] = useState<string>('')
   const [loading, setLoading] = useState<boolean>(false)
+  const { chainId }: INetworkState = useNetwork()
   const [error, setError] = useState<string>('')
+  const { account } = useAuth()
   const theme = useTheme()
 
   const styles = {
@@ -67,25 +75,32 @@ export const FaucetForm = () => {
     setFaucetType(type)
   }
 
-  const account = ''
-  const chainId = ''
   const handleFaucetSubmit = async (): Promise<void> => {
     try {
       setError('')
       setLoading(true)
-      const uri = `/api/faucet?network=${apiRoute}&type=${faucetType}&account=${account}`
-      const faucetResponse: Response = await fetch(uri)
-      const data = await faucetResponse.json()
-      const { error, transactionHash } = data
-      if (error) {
-        setError(error)
-      } else if (!transactionHash) {
+      const faucetResponse = await fetch('/api/faucet', {
+        method: 'POST',
+        body: JSON.stringify({
+          type: faucetType,
+          network: ALLOWED_NETWORKS[chainId],
+          account,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      const { status, message, transaction_hash } = await faucetResponse.json()
+
+      if (status !== 'success') {
+        setError(message)
+      } else if (!transaction_hash) {
         setError(
           'No tx receipt was received. Please check your wallet for confirmation'
         )
       } else {
-        setTransaction(transactionHash)
-        setScannerUrl(createScannerUrl(chainId || '', transactionHash))
+        setTransaction(transaction_hash)
+        setScannerUrl(createScannerUrl(chainId, transaction_hash))
       }
       setLoading(false)
     } catch (e: any) {

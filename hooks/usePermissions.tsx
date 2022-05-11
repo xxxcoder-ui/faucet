@@ -1,9 +1,7 @@
 import {
-  ALLOWED_NETWORKS_MAP,
-  MIN_REQUIRED_FWEB3_FOR_MATIC,
+  ALLOWED_NETWORKS,
 } from '../constants'
 
-import { ethers } from 'ethers'
 import { IAuthState, useAuth } from './useAuth'
 import { INetworkState } from './useNetwork'
 import { useEffect, useState } from 'react'
@@ -20,9 +18,16 @@ export const usePermissions = (): IPermissionsState => {
   const [canUseFweb3Faucet, setCanUseFweb3Faucet] = useState<boolean>(false)
   const [canUseMaticFaucet, setCanUseMaticFaucet] = useState<boolean>(false)
   const [isAdmin, setIsAdmin] = useState<boolean>(false)
-  const { isLocalnet }: INetworkState = useNetwork()
+  const { chainId }: INetworkState = useNetwork()
   const { isConnected }: IAuthState = useAuth()
 
+  useEffect(() => {
+    if (isConnected && ALLOWED_NETWORKS[chainId]) {
+      setCanUseFweb3Faucet(true)
+      setCanUseMaticFaucet(true)
+    }
+
+  }, [chainId, isConnected])
   return {
     isAdmin,
     canUseMaticFaucet,
@@ -41,7 +46,7 @@ const _createBalanceRequestOptions = (
   chainId: string,
   address: string
 ): IRequestOptions => {
-  const networkName = ALLOWED_NETWORKS_MAP[chainId]
+  const networkName = ALLOWED_NETWORKS[chainId]
   const fweb3TokenAddress = getContractAddress(networkName, 'fweb3Token')
   return {
     chain: chainId,
@@ -54,7 +59,7 @@ const _createNFTRequestOptions = (
   chainId: string,
   address: string
 ): IRequestOptions => {
-  const networkName = ALLOWED_NETWORKS_MAP[chainId]
+  const networkName = ALLOWED_NETWORKS[chainId]
   const adminNftAddress = getContractAddress(networkName, 'fweb3AdminNft')
   return {
     chain: chainId,

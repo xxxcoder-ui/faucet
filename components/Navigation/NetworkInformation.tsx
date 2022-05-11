@@ -20,8 +20,7 @@ const BoxItem = ({ children }: IDefaultProps): JSX.Element => {
 
 export const NetworkInformation = () => {
   const { networkName, networkAllowed } = useNetwork()
-  const isWeb3Enabled = false
-  const isAuthenticated = false
+  const { isConnected } = useAuth()
 
   const renderConnectedAllowedNetwork = () => {
     return (
@@ -56,7 +55,7 @@ export const NetworkInformation = () => {
       </BoxItem>
     )
   }
-  if (!isAuthenticated || !isWeb3Enabled) {
+  if (!isConnected) {
     return (
       <BoxItem>
         <>
