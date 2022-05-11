@@ -1,13 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { attemptTransaction } from './../../lib/transact'
-import { checkOrigin } from '../../lib/cors'
-import { ethers } from 'ethers'
-import { formatError } from '../../lib/errors'
-import { getContractAddress } from './../../contracts/addresses/index'
-import { getPrivk, getProvider } from '../../lib/interfaces'
-import { loadAbi } from './../../contracts/abi/index'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { ALLOWED_NETWORKS } from '../../constants'
 import fetch from 'node-fetch'
 
 export default async function handler(
