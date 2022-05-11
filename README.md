@@ -1,7 +1,4 @@
 # Fweb3 Faucets (wip)
-
-```
-
 ## Development
 
 1. Clone the [contracts repo](https://github.com/fweb3/contracts)
@@ -9,11 +6,10 @@
 3. Make sure you copy over your deployed addresses into `./constants.js`
 4. Run the faucet with `yarn dev`
 
-
 TODO:
-- add local dev for FE
-- add captcha
-- add user data to account when faucet is used to cut down on api requests
+- ~~add local dev for FE~~
+- ~~add captcha~~
+- ~~add user data to account when faucet is used to cut down on api requests~~
 - add tests
 - match game styles
-- admin panel
+- ~~admin panel~~
