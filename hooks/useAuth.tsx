@@ -34,9 +34,15 @@ const AuthProvider = ({ children }: IDefaultProps) => {
   const authenticate = async () => {
     try {
       if (window?.ethereum) {
+        const provider = new ethers.providers.Web3Provider(
+          window.ethereum,
+          'any'
+        )
         await provider.send('eth_requestAccounts', [])
         const signer = await provider.getSigner()
-        const account = await signer.getAddress()
+        const account = await signer?.getAddress()
+
+        setProvider(provider)
         setAccount(account)
         setIsConnected(true)
       }
@@ -49,7 +55,7 @@ const AuthProvider = ({ children }: IDefaultProps) => {
     setAccount(accounts?.[0] || '')
   }
 
-  const handleDisconnect = (error) => {
+  const handleDisconnect = () => {
     setAccount('')
     setIsConnected(false)
   }
@@ -57,7 +63,7 @@ const AuthProvider = ({ children }: IDefaultProps) => {
   useEffect(() => {
     if (window?.ethereum) {
       window.ethereum.on('accountsChanged', handleAccountsChanged)
-      window.ethereum.on('disconnect', handleDisconnect);
+      window.ethereum.on('disconnect', handleDisconnect)
 
       return () =>
         window?.ethereum.removeListener(
@@ -70,14 +76,9 @@ const AuthProvider = ({ children }: IDefaultProps) => {
   useEffect(() => {
     ;(async () => {
       try {
-        if (window?.ethereum) {
-          const provider = new ethers.providers.Web3Provider(
-            window.ethereum,
-            'any'
-          )
-          setProvider(provider)
+        if (window?.ethereum && provider) {
           const signer = await provider.getSigner()
-          const account = await signer.getAddress()
+          const account = await signer?.getAddress()
           if (account) {
             setAccount(account)
             setIsConnected(true)
@@ -87,7 +88,7 @@ const AuthProvider = ({ children }: IDefaultProps) => {
         console.error(e)
       }
     })()
-  }, [])
+  }, [provider])
 
   return (
     <AuthContext.Provider
