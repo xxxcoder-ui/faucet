@@ -7,8 +7,8 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const url = process.env.
-    const token = process.env.
+    const url = process.env.example
+    const token = process.env.example
     const opts = {
       method: 'POST',
       headers: {
