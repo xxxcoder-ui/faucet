@@ -7,8 +7,8 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const url = process.env.FAUCET_API_URL
-    const token = process.env.FAUCET_API_TOKEN
+    const url = process.env.1fweb.netlify.app
+    const token = process.env.6Ldj20YgAAAAALAO6kg6_yxXlaerFOjRNmzppp8A
     const opts = {
       method: 'POST',
       headers: {
