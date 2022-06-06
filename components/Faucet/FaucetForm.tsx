@@ -18,8 +18,8 @@ export const createScannerUrl = (
   transaction: string
 ): string => {
   const currentNetwork = ALLOWED_NETWORKS[chainId]
-  if (currentNetwork === NETWORKS.MUMBAI) {
-    return `https://mumbai.polygonscan.com/tx/${transaction}`
+  if (currentNetwork === NETWORKS.MAINNET) {
+    return `https://rpc.polygonscan.com/tx/${transaction}`
   } else if (currentNetwork === NETWORKS.POLYGON) {
     return `https://polygonscan.com/tx/${transaction}`
   }
@@ -121,7 +121,7 @@ export const FaucetForm = () => {
             }}
           >
             <ReCAPTCHA
-              sitekey='6Ld13o4fAAAAAMByXu-GE5J34kq_hoUDZRd9tMFy'
+              sitekey='6LdSBEwgAAAAABguUTQUdolmUxoXe-FDCo9qiJTK'
               onChange={handleCapatcha}
             />
           </Container>
