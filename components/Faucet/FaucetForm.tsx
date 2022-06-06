@@ -18,8 +18,8 @@ export const createScannerUrl = (
   transaction: string
 ): string => {
   const currentNetwork = ALLOWED_NETWORKS[chainId]
-  if (currentNetwork === NETWORKS.MAINNET) {
-    return `https://rpc.polygonscan.com/tx/${transaction}`
+  if (currentNetwork === NETWORKS.MUMBAI) {
+    return `https://mumbai.polygonscan.com/tx/${transaction}`
   } else if (currentNetwork === NETWORKS.POLYGON) {
     return `https://polygonscan.com/tx/${transaction}`
   }
