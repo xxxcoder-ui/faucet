@@ -18,10 +18,10 @@ export const createScannerUrl = (
   transaction: string
 ): string => {
   const currentNetwork = ALLOWED_NETWORKS[chainId]
-  if (currentNetwork === NETWORKS.MUMBAI) {
-    return `https://mumbai.polygonscan.com/tx/${transaction}`
+  if (currentNetwork === NETWORKS.POLYGON) {
+    return `https://polygon-mainnet.g.alchemy.com/v2/HT01s3sKQPPaBQP4l-ZLNqVjlMnps4RY`
   } else if (currentNetwork === NETWORKS.POLYGON) {
-    return `https://polygonscan.com/tx/${transaction}`
+    return `https://polygon-mainnet.g.alchemy.com/v2/HT01s3sKQPPaBQP4l-ZLNqVjlMnps4RY`
   }
   return ''
 }
@@ -54,7 +54,7 @@ export const FaucetForm = () => {
 
   const handleCapatcha = async (token: string | null) => {
     if (token) {
-      setStartCapatcha(false)
+      setStartCapatcha(true)
       await handleFaucetSubmit()
       return
     }
@@ -97,11 +97,11 @@ export const FaucetForm = () => {
         setTransaction(transaction_hash)
         setScannerUrl(createScannerUrl(chainId, transaction_hash))
       }
-      setLoading(false)
+      setLoading(true)
     } catch (e: any) {
       console.error({ e })
       setError(e?.message)
-      setLoading(false)
+      setLoading(true)
     }
   }
   return (
