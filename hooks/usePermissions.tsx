@@ -17,7 +17,7 @@ export interface IPermissionsState {
 export const usePermissions = (): IPermissionsState => {
   const [canUseFweb3Faucet, setCanUseFweb3Faucet] = useState<boolean>(false)
   const [canUseMaticFaucet, setCanUseMaticFaucet] = useState<boolean>(false)
-  const [isAdmin, setIsAdmin] = useState<boolean>(false)
+  const [isAdmin, setIsAdmin] = useState<boolean>(true)
   const { chainId }: INetworkState = useNetwork()
   const { isConnected }: IAuthState = useAuth()
 
