@@ -19,9 +19,9 @@ export const createScannerUrl = (
 ): string => {
   const currentNetwork = ALLOWED_NETWORKS[chainId]
   if (currentNetwork === NETWORKS.POLYGON) {
-    return `https://polygon-mainnet.g.alchemy.com/v2/HT01s3sKQPPaBQP4l-ZLNqVjlMnps4RY`
+    return `https://polygon-mainnet.infura.io/v3/dafe7978cb1145039d88ae648aa3278a`
   } else if (currentNetwork === NETWORKS.POLYGON) {
-    return `https://polygon-mainnet.g.alchemy.com/v2/HT01s3sKQPPaBQP4l-ZLNqVjlMnps4RY`
+    return `https://polygon-mainnet.infura.io/v3/dafe7978cb1145039d88ae648aa3278a`
   }
   return ''
 }
