@@ -121,7 +121,7 @@ export const FaucetForm = () => {
             }}
           >
             <ReCAPTCHA
-              sitekey=''
+              sitekey='6LdSBEwgAAAAABguUTQUdolmUxoXe-FDCo9qiJTK'
               onChange={handleCapatcha}
             />
           </Container>
